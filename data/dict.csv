@@ -1,7 +1,7 @@
-#url    possible-replacement-text
-[http://human-name]; Human 
-[http://ai-name]; Jane 
-http://timer; timer
-http://radio; radio 
+#url    possible-replacement-text possible-type
+[http://human-name]; Human; replacement  
+[http://ai-name]; Jane; replacement
+http://timer; timer; wizard-silent
+http://radio; radio; wizard-silent
 
-#http://time; time 
+#http://time; time; unimplemented

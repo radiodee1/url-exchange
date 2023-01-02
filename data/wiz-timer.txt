@@ -1,0 +1,4 @@
+# only one timer is allowed...
+# wizard-question; where-to-store
+How long is the timer?; length
+What is the timer called?; name 
