@@ -25,6 +25,15 @@ class Exchange:
             return
         if self.verbose:
             print("load", self.text_name)
+        f = open( self.text_name, "r") 
+        lines = f.readlines()
+        for i in lines:
+            if i.strip().startswith("#") or i.strip() == "":
+                continue
+            x = i.split(";")
+            self.exchange[x[0].strip()] = x[1].strip()
+        if self.verbose:
+            print(self.exchange)
         pass
 
     def load_wizards(self):
