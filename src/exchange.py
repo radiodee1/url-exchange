@@ -5,6 +5,7 @@ import argparse
 class Exchange:
     def __init__(self):
         self.exchange = {}
+        self.pre_query = {} 
         self.dict_name = ""
         self.text_name = ""
         self.wizard = ['radio', 'timer']
@@ -56,8 +57,8 @@ if __name__ == '__main__':
     e = Exchange()
     parser = argparse.ArgumentParser(description="URL Exchange", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--dict_name', default='./../data/dict.txt', help='name for "dictionary" input file.')
-    parser.add_argument('--text_name', help='name for additional "tsv" input file.')
-    parser.add_argument("--wizards", default="radio,timer", help="csv list of possible wizards - added to current list.")
+    parser.add_argument('--text_name', help='name for additional "csv" input file.')
+    parser.add_argument("--wizards", default="radio,timer", help="comma sep list of possible wizards - added to current list.")
     parser.add_argument("--verbose", action="store_true", help="show debugging output.")
     parser.add_argument("--update", action="store_true", help="do not skip updating exchange on exit.")
     args = parser.parse_args()
