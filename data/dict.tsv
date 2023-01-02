@@ -1,0 +1,7 @@
+#url    position-in-dictionary  possible-replacement-text
+[http://human-name]   pre-query.human     Human 
+[http://ai-name]  pre-query.ai    Jane 
+[http://time]   post-query.replace.time     Time 
+[http://timer]  post-query.wizard-silent.timer  Timer 
+[http://radio]  post-query.wizard-silent.radio  Radio 
+
