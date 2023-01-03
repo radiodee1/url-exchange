@@ -1,1 +1,2 @@
-rock, jazz, classical, christmas. What kind of music do you want to hear?
+# wizard-question; where-to-store
+rock, jazz, classical, christmas. What kind of music do you want to hear?; type
