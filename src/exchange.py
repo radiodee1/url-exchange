@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import argparse
+import copy 
 
 class Wizard:
     def __init__(self):
@@ -12,10 +13,7 @@ class Wizard:
         self.key = ''
         self.print = None
         self.input = None
-        self.settings = {
-                'wizard-loud': {},
-                'wizard-silent': {} 
-                }
+        self.settings = { }
 
     def set_process_cmd(self, p): ## what for??
         self.process = p          ## what for?? 
@@ -53,14 +51,17 @@ class Wizard:
         for i in self.commands:
             self.print(i[0].strip()) ## print the question
             x = self.input("> ")     ## wait for the answer
-            self.settings['wizard-loud'][i[1].strip()] = x.strip() 
+            self.settings[i[1].strip()] = x.strip() 
         pass 
 
     def silent(self):
         for i in self.commands:
             x = self.query(self.line_in + " " + i[0].strip())
-            self.settings['wizard-silent'][i[1].strip()] = x.strip() 
+            self.settings[i[1].strip()] = x.strip() 
         pass
+
+    def process(self, input):
+        self.process(input)
 
 
 class Exchange:
@@ -105,11 +106,13 @@ class Exchange:
                 if x[2].strip() == "wizard-silent":
                     self.exchange['wizard-silent'][x[1].strip()] = {}
                     self.exchange['wizard-silent'][x[1].strip()]['name'] = x[1].strip()
-                    self.exchange['wizard-silent'][x[1].strip()]['active'] = False 
+                    self.exchange['wizard-silent'][x[1].strip()]['object'] = Wizard()
+                    self.exchange['wizard-silent'][x[1].strip()]['object'].set_key(x[1].strip())
                 elif x[2].strip() == "wizard-loud":
                     self.exchange['wizard-loud'][x[1].strip()] = {} 
                     self.exchange['wizard-loud'][x[1].strip()]['name'] = x[1].strip()
-                    self.exchange['wizard-loud'][x[1].strip()]['active'] = False 
+                    self.exchange['wizard-loud'][x[1].strip()]['object'] = Wizard()
+                    self.exchange['wizard-loud'][x[1].strip()]['object'].set_key(x[1].strip())
 
         if self.verbose:
             print(self.exchange)
@@ -153,8 +156,19 @@ class Exchange:
         
     def set_input_post_query(self, i):
         for x in self.exchange['post_query']:
+            xx = self.exchange['post_query'][x]
             if self.verbose:
-                print(x) 
+                print(x, self.exchange['post_query'][x], xx)
+            if xx in i:
+                if xx.strip() in self.exchange['wizard-silent']:
+                    key = self.exchange['wizard-silent'][xx]['object']
+                if xx.strip() in self.exchange['wizard-loud']:
+                    key = self.exchange['wizard-loud'][xx]['object']
+                w = copy.copy(key)
+                print(w.key, "key name")
+                #w.set_key(key)
+                return w
+        return None 
         pass 
 
     def set_input_pre_query(self, i):
@@ -197,4 +211,7 @@ if __name__ == '__main__':
     e.load_wizards()
     z = e.set_input_pre_query("some text here from [http://ai-name].")
     print(z)
+
+    z = e.set_input_post_query("some text here for http://timer here.")
+    print(z.key, type(z))
     e.save_dict()
