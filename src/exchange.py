@@ -2,6 +2,67 @@
 
 import argparse
 
+class Wizard:
+    def __init__(self):
+        self.active = False
+        self.commands = []
+        self.process = None 
+        self.query = None 
+        self.line_in = ''
+        self.key = ''
+        self.print = None
+        self.input = None
+        self.settings = {
+                'wizard-loud': {},
+                'wizard-silent': {} 
+                }
+
+    def set_process_cmd(self, p): ## what for??
+        self.process = p          ## what for?? 
+
+    def set_query_cmd(self, q):
+        self.query = q
+
+    def set_print_cmd(self, p):
+        self.print = p
+
+    def set_input_cmd(self, i):
+        self.input = i 
+
+    def set_line(self, line):
+        self.line_in = line 
+
+    def set_key(self, key):
+        self.key = key 
+
+    def set_active(self, a):
+        self.active = a 
+
+    def load_commands(self, filename):
+        f = open(filename, 'r')
+        lines = f.readlines
+        for line in lines:
+            if line.strip().startswith('#') or line.strip() == "":
+                continue
+            part = line.strip().split(";")
+            if len(part) > 1:
+                self.commands.append([part[0].strip(), part[1].strip()]) 
+        pass
+        
+    def loud(self):
+        for i in self.commands:
+            self.print(i[0].strip()) ## print the question
+            x = self.input("> ")     ## wait for the answer
+            self.settings['wizard-loud'][i[1].strip()] = x.strip() 
+        pass 
+
+    def silent(self):
+        for i in self.commands:
+            x = self.query(self.line_in + " " + i[0].strip())
+            self.settings['wizard-silent'][i[1].strip()] = x.strip() 
+        pass
+
+
 class Exchange:
     def __init__(self):
         self.exchange = {}
@@ -15,6 +76,8 @@ class Exchange:
         self.wizards_loud = []
         self.verbose = False
         self.update = False 
+        self.query = None
+        self.classes = []
 
     def save_dict(self):
         if self.update == False:
@@ -42,10 +105,12 @@ class Exchange:
                 if x[2].strip() == "wizard-silent":
                     self.exchange['wizard-silent'][x[1].strip()] = {}
                     self.exchange['wizard-silent'][x[1].strip()]['name'] = x[1].strip()
+                    self.exchange['wizard-silent'][x[1].strip()]['active'] = False 
                 elif x[2].strip() == "wizard-loud":
                     self.exchange['wizard-loud'][x[1].strip()] = {} 
                     self.exchange['wizard-loud'][x[1].strip()]['name'] = x[1].strip()
-                    
+                    self.exchange['wizard-loud'][x[1].strip()]['active'] = False 
+
         if self.verbose:
             print(self.exchange)
         pass
@@ -83,7 +148,25 @@ class Exchange:
         if self.verbose:
             print(self.wizards_loud)
 
+    def set_query_cmd(self, q):
+        self.query = q
+        
+    def set_input_post_query(self, i):
+        for x in self.exchange['post_query']:
+            if self.verbose:
+                print(x) 
+        pass 
 
+    def set_input_pre_query(self, i):
+        for x in self.exchange['pre_query']:
+            if x in i:
+                i = i.replace(x, self.exchange['pre_query'][x])
+        if self.verbose:
+            print(i, ": input after pre_query")
+        return i 
+
+    def get_status(self):
+        return ""
 
 if __name__ == '__main__':
     e = Exchange()
@@ -112,5 +195,6 @@ if __name__ == '__main__':
         e.load_txt()
 
     e.load_wizards()
-
+    z = e.set_input_pre_query("some text here from [http://ai-name].")
+    print(z)
     e.save_dict()
