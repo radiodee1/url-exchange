@@ -6,6 +6,7 @@ import copy
 class Wizard:
     def __init__(self):
         self.active = False
+        self.is_silent = True 
         self.commands = []
         self.process = None 
         self.query = None 
@@ -67,11 +68,13 @@ class Timer(Wizard):
     def __init__(self):
         super().__init__()
         self.key = 'timer'
+        self.is_silent = True
 
 class Radio(Wizard):
     def __init__(self):
         super().__init__()
         self.key = 'radio'
+        self.is_silent = True
 
 class Exchange:
     def __init__(self):
@@ -91,7 +94,8 @@ class Exchange:
 
     def save_dict(self):
         if self.update == False:
-            return 
+            return
+        print(self.exchange)
         pass 
 
     def load_dict(self):
@@ -194,8 +198,14 @@ class Exchange:
                 if xx.strip() in self.exchange['wizard-loud']:
                     key = self.exchange['wizard-loud'][xx]['object']
                 w = copy.copy(key)
-                print(w.key, "key name")
+                print(w.key, ":key name")
                 #w.set_key(key)
+                w.set_line(i)
+                if w.is_silent:
+                    w.silent()
+                elif not w.is_silent:
+                    w.loud()
+                print(w.settings)
                 return w
         return None 
         pass 
@@ -214,7 +224,7 @@ class Exchange:
 if __name__ == '__main__':
     e = Exchange()
     parser = argparse.ArgumentParser(description="URL Exchange", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--dict_name', default='./../data/dict.txt', help='name for "dictionary" input file.')
+    parser.add_argument('--dict_name', default='./../data/dict.json', help='name for "dictionary" json input file.')
     parser.add_argument('--text_name', help='name for additional "csv" input file.')
     parser.add_argument("--wizards_loud", default="", help="comma sep list of possible loud wizards - added to current list.")
     parser.add_argument("--wizards_silent", default="radio,timer", help="comma sep list of possible silent wizards - added to current list.")
