@@ -63,6 +63,15 @@ class Wizard:
     def process(self, input):
         self.process(input)
 
+class Timer(Wizard):
+    def __init__(self):
+        super().__init__()
+        self.key = 'timer'
+
+class Radio(Wizard):
+    def __init__(self):
+        super().__init__()
+        self.key = 'radio'
 
 class Exchange:
     def __init__(self):
@@ -106,7 +115,9 @@ class Exchange:
                 if x[2].strip() == "wizard-silent":
                     self.exchange['wizard-silent'][x[1].strip()] = {}
                     self.exchange['wizard-silent'][x[1].strip()]['name'] = x[1].strip()
-                    self.exchange['wizard-silent'][x[1].strip()]['object'] = Wizard()
+
+                    wizard = self._choose_silent(x[1].strip())
+                    self.exchange['wizard-silent'][x[1].strip()]['object'] = wizard
                     self.exchange['wizard-silent'][x[1].strip()]['object'].set_key(x[1].strip())
                 elif x[2].strip() == "wizard-loud":
                     self.exchange['wizard-loud'][x[1].strip()] = {} 
@@ -116,6 +127,24 @@ class Exchange:
 
         if self.verbose:
             print(self.exchange)
+        pass
+
+    def _choose_silent(self, xx):
+        wizard = None 
+        if xx == "timer":
+            wizard = Timer()
+        elif xx == "radio":
+            wizard = Radio()
+        elif xx == "username":
+            wizard = Wizard()
+        elif xx == "ainame":
+            wizard = Wizard()
+        else:
+            wizard = Wizard()
+            pass
+        if self.verbose:
+            print(wizard.key, ":key")
+        return wizard
         pass
 
     def load_wizards(self):
