@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 import argparse
-import copy 
+import copy
+import pickle
 
 class Wizard:
     def __init__(self):
@@ -98,9 +99,15 @@ class Exchange:
         if self.update == False:
             return
         print(self.exchange)
+        f = open(self.dict_name, 'wb')
+        pickle.dump(self.exchange, f, pickle.HIGHEST_PROTOCOL)
+        f.close()
         pass 
 
     def load_dict(self):
+        f = open(self.dict_name, 'rb')
+        self.exchange = pickle.load(f)
+        f.close()
         pass
 
     def load_txt(self):
@@ -240,7 +247,7 @@ class Exchange:
 if __name__ == '__main__':
     e = Exchange()
     parser = argparse.ArgumentParser(description="URL Exchange", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--dict_name', default='./../data/dict.json', help='name for "dictionary" json input file.')
+    parser.add_argument('--dict_name', default='./../data/dict.pickle', help='name for "dictionary" json input file.')
     parser.add_argument('--text_name', help='name for additional "csv" input file.')
     parser.add_argument("--wizards_loud", default="", help="comma sep list of possible loud wizards - added to current list.")
     parser.add_argument("--wizards_silent", default="radio,timer", help="comma sep list of possible silent wizards - added to current list.")
