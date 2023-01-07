@@ -39,7 +39,7 @@ class Wizard:
 
     def load_commands(self, filename):
         f = open(filename, 'r')
-        lines = f.readlines
+        lines = f.readlines()
         for line in lines:
             if line.strip().startswith('#') or line.strip() == "":
                 continue
@@ -57,8 +57,9 @@ class Wizard:
 
     def silent(self):
         for i in self.commands:
-            x = self.query(self.line_in + " " + i[0].strip())
-            self.settings[i[1].strip()] = x.strip() 
+            if len(i) > 1:
+                x = self.query(self.line_in + " " + i[0].strip())
+                self.settings[i[1].strip()] = x.strip() 
         pass
 
     def process(self, input):
@@ -91,6 +92,7 @@ class Exchange:
         self.update = False 
         self.query = None
         self.classes = []
+        self.path = "./../data/"
 
     def save_dict(self):
         if self.update == False:
@@ -119,10 +121,12 @@ class Exchange:
                 if x[2].strip() == "wizard-silent":
                     self.exchange['wizard-silent'][x[1].strip()] = {}
                     self.exchange['wizard-silent'][x[1].strip()]['name'] = x[1].strip()
+                    
 
                     wizard = self._choose_silent(x[1].strip())
                     self.exchange['wizard-silent'][x[1].strip()]['object'] = wizard
                     self.exchange['wizard-silent'][x[1].strip()]['object'].set_key(x[1].strip())
+                    self.load_wizard(wizard) 
                 elif x[2].strip() == "wizard-loud":
                     self.exchange['wizard-loud'][x[1].strip()] = {} 
                     self.exchange['wizard-loud'][x[1].strip()]['name'] = x[1].strip()
@@ -151,10 +155,20 @@ class Exchange:
         return wizard
         pass
 
-    def load_wizards(self):
-        for x in self.wizards_silent:
-            if self.verbose:
-                print("load wizard", x)
+    def _get_wizard_path(self, w):
+        x = self.path + "/wiz-" + w + ".txt"
+        return x 
+
+    def load_wizard(self, obj ):
+        x = obj.key 
+        xx = self._get_wizard_path(x)
+        obj.load_commands(xx)
+        if self.verbose:
+            print("load wizard", x)
+            print(obj.commands, ":commands", xx)
+ 
+    def set_path(self, p):
+        self.path = p
 
     def set_verbose(self, v):
         self.verbose = v
@@ -186,6 +200,8 @@ class Exchange:
 
     def set_query_cmd(self, q):
         self.query = q
+        for xx in self.exchange['wizard-silent']:
+            self.exchange['wizard-silent'][xx]['object'].set_query_cmd(self.query)
         
     def set_input_post_query(self, i):
         for x in self.exchange['post_query']:
@@ -230,6 +246,7 @@ if __name__ == '__main__':
     parser.add_argument("--wizards_silent", default="radio,timer", help="comma sep list of possible silent wizards - added to current list.")
     parser.add_argument("--verbose", action="store_true", help="show debugging output.")
     parser.add_argument("--update", action="store_true", help="do not skip updating exchange on exit.")
+    parser.add_argument("--path", default="./../data/", help="default data directory")
     args = parser.parse_args()
 
     if args.verbose:
@@ -241,15 +258,18 @@ if __name__ == '__main__':
     e.set_extra_wizards_silent(args.wizards_silent)
     e.set_extra_wizards_loud(args.wizards_loud)
     e.set_update_on_exit(args.update)
+    e.set_path(args.path)
+
 
     e.load_dict()
     if args.text_name != None:
         e.set_text_name(args.text_name)
         e.load_txt()
 
-    e.load_wizards()
     z = e.set_input_pre_query("some text here from [http://ai-name].")
     print(z)
+
+    e.set_query_cmd(input)
 
     z = e.set_input_post_query("some text here for http://timer here.")
     print(z.key, type(z))
