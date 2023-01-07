@@ -108,7 +108,11 @@ class Exchange:
         f = open(self.dict_name, 'rb')
         self.exchange = pickle.load(f)
         f.close()
+        print(self.exchange)
         pass
+
+    def build_objects(self):
+        pass 
 
     def load_txt(self):
         if self.text_name == "" or self.text_name == None:
@@ -128,7 +132,6 @@ class Exchange:
                 if x[2].strip() == "wizard-silent":
                     self.exchange['wizard-silent'][x[1].strip()] = {}
                     self.exchange['wizard-silent'][x[1].strip()]['name'] = x[1].strip()
-                    
 
                     wizard = self._choose_silent(x[1].strip())
                     self.exchange['wizard-silent'][x[1].strip()]['object'] = wizard
@@ -221,7 +224,6 @@ class Exchange:
                 if xx.strip() in self.exchange['wizard-loud']:
                     key = self.exchange['wizard-loud'][xx]['object']
                 w = copy.copy(key)
-                print(w.key, ":key name")
                 #w.set_key(key)
                 w.set_line(i)
                 if w.is_silent:
@@ -256,9 +258,6 @@ if __name__ == '__main__':
     parser.add_argument("--path", default="./../data/", help="default data directory")
     args = parser.parse_args()
 
-    if args.verbose:
-        print(args.text_name)
-        print(args.dict_name)
 
     e.set_verbose(args.verbose) 
     e.set_dict_name(args.dict_name)
