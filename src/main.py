@@ -15,10 +15,8 @@ from pipeline import PipelineCloud
 
 e = Exchange()
 
-i = e.mod_input("hi there...")
+# i = e.mod_input("hi there...")
 
-print(i)
-print(e)
 
 PREPEND = '''{human}: Hi?
 {jane}: Hello there.
@@ -34,7 +32,7 @@ PREPEND = '''{human}: Hi?
 
 
 def get_gpt(question):
-    prompt = PREPEND + "\n\nHuman: " + question.strip() + "\nJane: "
+    prompt = question.strip()
     pipeline_token = os.environ['GPT_ETC_GPTJ_MODEL']
     pipeline_key = os.environ['GPT_ETC_GPTJ_KEY']
     api = PipelineCloud(token=pipeline_key)
@@ -49,8 +47,44 @@ def get_gpt(question):
             },
         ],
     )
-    
-    output = run["result_preview"][0][0]
+    if run != None:
+        try:
+            output = run["result_preview"][0][0]
+        except:
+            print(run)
+    else: 
+        output = ""
     return output
 
+if  __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="URL Exchange", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--dict_name', default='./../data/dict.pickle', help='name for "dictionary" json input file.')
+    parser.add_argument('--text_name', help='name for additional "csv" input file.')
+    parser.add_argument("--wizards_loud", default="", help="comma sep list of possible loud wizards - added to current list.")
+    parser.add_argument("--wizards_silent", default="radio,timer", help="comma sep list of possible silent wizards - added to current list.")
+    parser.add_argument("--verbose", action="store_true", help="show debugging output.")
+    parser.add_argument("--update", action="store_true", help="do not skip updating exchange on exit.")
+    parser.add_argument("--path", default="./../data/", help="default data directory")
+    args = parser.parse_args()
+
+    e.set_verbose(True)
+    e.build_objects()
+    #e.load_txt()
+    e.set_verbose(False)
+
+    e.set_query_cmd(get_gpt)
+    
+    print("URL Exchange")
+    while True:
+        x = input("> ")
+
+        x = PREPEND + "\n\nHuman: " + x.strip() + "\nJane: "
+        print('xxx', x, 'xxx', sep="\n")
+        #i = e.mod_input(x)
+        if args.verbose:
+            print(x)
+        z = e.set_input_post_query(x)
+        if z != None:
+            print("special url found", z.settings)
+        print(get_gpt(x))
 

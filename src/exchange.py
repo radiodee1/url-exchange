@@ -119,6 +119,8 @@ class Exchange:
 
     def build_objects(self):
         for i in self.wizards_silent:
+            if self.verbose:
+                print(i)
             self.exchange['wizard-silent'][i.strip()] = {}
             self.exchange['wizard-silent'][i.strip()]['name'] = i.strip()
 
