@@ -112,6 +112,19 @@ class Exchange:
         pass
 
     def build_objects(self):
+        for i in self.wizards_silent:
+            self.exchange['wizard-silent'][i.strip()] = {}
+            self.exchange['wizard-silent'][i.strip()]['name'] = i.strip()
+
+            wizard = self._choose_silent(i.strip())
+            self.exchange['wizard-silent'][i.strip()]['object'] = wizard
+            self.exchange['wizard-silent'][i.strip()]['object'].set_key(i.strip())
+            self.load_wizard(wizard) 
+        for i in self.wizards_loud:
+            self.exchange['wizard-loud'][i.strip()] = {} 
+            self.exchange['wizard-loud'][i.strip()]['name'] = i.strip()
+            self.exchange['wizard-loud'][i.strip()]['object'] = Wizard()
+            self.exchange['wizard-loud'][i.strip()]['object'].set_key(i.strip())
         pass 
 
     def load_txt(self):
@@ -212,12 +225,36 @@ class Exchange:
         self.query = q
         for xx in self.exchange['wizard-silent']:
             self.exchange['wizard-silent'][xx]['object'].set_query_cmd(self.query)
-        
+
+    def mod_input(self, i):
+        ## possible multi-line input 
+        if len(i) > 0:
+            i = i.strip().split("\n")[-1]
+            ## possible header before desired text 
+            ii = ""
+            y = 0
+            for x in i.split(' '):
+                if not x.endswith(":"):
+                    ii = ii + " " + x
+                elif y == 1:
+                    ii = ""
+                y += 1
+            i = ii 
+        return i
+        pass
+
+    def mod_output(self, i):
+        ## assume single word output 
+        if len(i) > 0:
+            i = i.strip().split(" ")[0]
+        return i
+        pass 
+
     def set_input_post_query(self, i):
         for x in self.exchange['post_query']:
             xx = self.exchange['post_query'][x]
             if self.verbose:
-                print(x, self.exchange['post_query'][x], xx)
+                print(x, self.exchange['post_query'][x], xx , ':tag')
             if xx in i:
                 if xx.strip() in self.exchange['wizard-silent']:
                     key = self.exchange['wizard-silent'][xx]['object']
@@ -230,7 +267,8 @@ class Exchange:
                     w.silent()
                 elif not w.is_silent:
                     w.loud()
-                print(w.settings)
+                if self.verbose:
+                    print(w.settings)
                 return w
         return None 
         pass 
@@ -266,7 +304,7 @@ if __name__ == '__main__':
     e.set_update_on_exit(args.update)
     e.set_path(args.path)
 
-
+    e.build_objects()
     e.load_dict()
     if args.text_name != None:
         e.set_text_name(args.text_name)
@@ -277,6 +315,7 @@ if __name__ == '__main__':
 
     e.set_query_cmd(input)
 
-    z = e.set_input_post_query("some text here for http://timer here.")
+    i = e.mod_input("Human : some text here for http://timer here.")
+    z = e.set_input_post_query(i)
     print(z.key, type(z))
     e.save_dict()
