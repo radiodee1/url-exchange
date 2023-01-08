@@ -9,8 +9,8 @@ class Wizard:
         self.active = False
         self.is_silent = True 
         self.commands = []
-        self.process = None 
-        self.query = None 
+        #self.process = None 
+        #self.query = None 
         self.line_in = ''
         self.key = ''
         self.print = None
@@ -64,7 +64,11 @@ class Wizard:
         pass
 
     def process(self, input):
-        self.process(input)
+        return input
+
+    def query(self, input):
+        return input
+
 
 class Timer(Wizard):
     def __init__(self):
@@ -72,11 +76,13 @@ class Timer(Wizard):
         self.key = 'timer'
         self.is_silent = True
 
+
 class Radio(Wizard):
     def __init__(self):
         super().__init__()
         self.key = 'radio'
         self.is_silent = True
+
 
 class Exchange:
     def __init__(self):
@@ -98,7 +104,7 @@ class Exchange:
     def save_dict(self):
         if self.update == False:
             return
-        print(self.exchange)
+        #print(self.exchange)
         f = open(self.dict_name, 'wb')
         pickle.dump(self.exchange, f, pickle.HIGHEST_PROTOCOL)
         f.close()
@@ -108,7 +114,7 @@ class Exchange:
         f = open(self.dict_name, 'rb')
         self.exchange = pickle.load(f)
         f.close()
-        print(self.exchange)
+        #print(self.exchange)
         pass
 
     def build_objects(self):
@@ -239,7 +245,7 @@ class Exchange:
                 elif y == 1:
                     ii = ""
                 y += 1
-            i = ii 
+            i = ii.strip() 
         return i
         pass
 
@@ -279,7 +285,7 @@ class Exchange:
                 i = i.replace(x, self.exchange['pre_query'][x])
         if self.verbose:
             print(i, ": input after pre_query")
-        return i 
+        return i.strip() 
 
     def get_status(self):
         return ""
@@ -311,11 +317,17 @@ if __name__ == '__main__':
         e.load_txt()
 
     z = e.set_input_pre_query("some text here from [http://ai-name].")
-    print(z)
+
+    if args.verbose:
+        print(z)
 
     e.set_query_cmd(input)
 
     i = e.mod_input("Human : some text here for http://timer here.")
+    if args.verbose:
+        print(i)
     z = e.set_input_post_query(i)
-    print(z.key, type(z))
+    
+    if args.verbose:
+        print(z.key, type(z))
     e.save_dict()
