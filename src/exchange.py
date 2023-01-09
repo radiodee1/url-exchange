@@ -4,6 +4,21 @@ import argparse
 import copy
 import dill as pickle
 
+PREPEND = '''{human}: Hi?
+{jane}: Hello there.
+
+{human}: Do you like candy?
+{jane}: Yes I like candy.
+
+{human}: What is your favorite color?
+{jane}: My favorite color is blue.
+
+{human}: How old are you?
+{jane}: I am 21 years old.
+
+{human}: '''.format(human="Human", jane="Jane")
+
+
 class Wizard:
     def __init__(self):
         self.active = False
@@ -59,7 +74,9 @@ class Wizard:
     def silent(self):
         for i in self.commands:
             if len(i) > 1:
-                x = self.query(self.line_in + " " + i[0].strip())
+                x = PREPEND + self.line_in + "\n\nJane: " + i[0].strip() + " "
+                print("???", x, "???", sep="\n")
+                x = self.query(x)
                 self.settings[i[1].strip()] = x.strip() 
         pass
 
@@ -255,7 +272,7 @@ class Exchange:
         ## assume single word output 
         if len(i) > 0:
             i = i.strip().split("\n")[0] ## pick first sentence
-            i = i.strip().split(" ")[0]  ## pick first word
+            #i = i.strip().split(" ")[0]  ## pick first word
         return i
         pass 
 

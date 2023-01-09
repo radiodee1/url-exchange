@@ -18,7 +18,13 @@ e = Exchange()
 # i = e.mod_input("hi there...")
 
 
-PREPEND = '''{human}: Hi?
+PREPEND = '''{human}: Turn on classic radio.
+{jane}: Set radio http://radio 
+
+{human}: Set a timer for five minutes.
+{jane}: Set timer http://timer 
+
+{human}: Hi?
 {jane}: Hello there.
 
 {human}: Do you like candy?
@@ -43,7 +49,7 @@ def get_gpt(question):
             {
                 "response_length": 64,
                 "temperature": 0.001, #1.0,
-                "top_k": 50
+                "top_k": 1 ## 50
             },
         ],
     )
@@ -72,7 +78,7 @@ if  __name__ == "__main__":
     e.load_dict()
     #e.set_verbose(False)
     e.set_path(args.path)
-    e.set_query_cmd(input)
+    e.set_query_cmd(get_gpt) ## input or get_gpt
     
     print("URL Exchange")
     while True:
