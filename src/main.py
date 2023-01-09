@@ -68,23 +68,30 @@ if  __name__ == "__main__":
     args = parser.parse_args()
 
     e.set_verbose(True)
-    e.build_objects()
-    #e.load_txt()
-    e.set_verbose(False)
-
-    e.set_query_cmd(get_gpt)
+    #e.build_objects()
+    e.load_dict()
+    #e.set_verbose(False)
+    e.set_path(args.path)
+    e.set_query_cmd(input)
     
     print("URL Exchange")
     while True:
         x = input("> ")
 
         x = PREPEND + "\n\nHuman: " + x.strip() + "\nJane: "
-        print('xxx', x, 'xxx', sep="\n")
+        print('--xxx--', x, '--xxx--', sep="\n")
         #i = e.mod_input(x)
         if args.verbose:
             print(x)
-        z = e.set_input_post_query(x)
+        #z = e.set_input_post_query(x)
+        #x = e.mod_input(x) 
+        out = get_gpt(x)
+        print(out, '----', sep="\n")
+        out = e.mod_output(out)
+        print(out)
+        z = e.set_input_post_query(out)
+        print(e.exchange['post_query'])
+        print(z, 'obj out')
         if z != None:
-            print("special url found", z.settings)
-        print(get_gpt(x))
+            print(z.settings)
 

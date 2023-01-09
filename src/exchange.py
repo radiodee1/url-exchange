@@ -2,7 +2,7 @@
 
 import argparse
 import copy
-import pickle
+import dill as pickle
 
 class Wizard:
     def __init__(self):
@@ -91,7 +91,7 @@ class Exchange:
         self.exchange["post_query"] = {}
         self.exchange['wizard-silent'] = {}
         self.exchange['wizard-loud'] = {}
-        self.dict_name = ""
+        self.dict_name = "./../data/dict.pickle"
         self.text_name = ""
         self.wizards_silent = ['radio', 'timer']
         self.wizards_loud = []
@@ -254,13 +254,14 @@ class Exchange:
     def mod_output(self, i):
         ## assume single word output 
         if len(i) > 0:
-            i = i.strip().split(" ")[0]
+            i = i.strip().split("\n")[0] ## pick first sentence
+            i = i.strip().split(" ")[0]  ## pick first word
         return i
         pass 
 
     def set_input_post_query(self, i):
         for x in self.exchange['post_query']:
-            xx = self.exchange['post_query'][x]
+            xx = self.exchange['post_query'][x].strip()
             if self.verbose:
                 print(x, self.exchange['post_query'][x], xx , ':tag')
             if xx in i:
