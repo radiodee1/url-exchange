@@ -4,20 +4,6 @@ import argparse
 import copy
 import dill as pickle
 
-PREPEND = '''{human}: Hi?
-{jane}: Hello there.
-
-{human}: Do you like candy?
-{jane}: Yes I like candy.
-
-{human}: What is your favorite color?
-{jane}: My favorite color is blue.
-
-{human}: How old are you?
-{jane}: I am 21 years old.
-
-{human}: '''.format(human="Human", jane="Jane")
-
 
 class Wizard:
     def __init__(self):
@@ -31,6 +17,20 @@ class Wizard:
         self.print = None
         self.input = None
         self.settings = { }
+        self.PREPEND = '''{human}: Hi?
+{jane}: Hello there.
+
+{human}: Do you like candy?
+{jane}: Yes I like candy.
+
+{human}: What is your favorite color?
+{jane}: My favorite color is blue.
+
+{human}: How old are you?
+{jane}: I am 21 years old.
+
+{human}: '''.format(human="Human", jane="Jane")
+
 
     def set_process_cmd(self, p): ## what for??
         self.process = p          ## what for?? 
@@ -74,9 +74,11 @@ class Wizard:
     def silent(self):
         for i in self.commands:
             if len(i) > 1:
-                x = PREPEND + self.line_in + "\n\nJane: " + i[0].strip() + " "
+                x = self.PREPEND + self.line_in + "\n\nHuman: " + i[0].strip() + " "
                 print("???", x, "???", sep="\n")
                 x = self.query(x)
+                x = self.mod_output(x)
+                x = self.mod_input(x)
                 self.settings[i[1].strip()] = x.strip() 
         pass
 
@@ -85,6 +87,31 @@ class Wizard:
 
     def query(self, input):
         return input
+
+    def mod_input(self, i):
+        ## possible multi-line input 
+        if len(i) > 0:
+            i = i.strip().split("\n")[-1]
+            ## possible header before desired text 
+            ii = ""
+            y = 0
+            for x in i.split(' '):
+                if not x.endswith(":"):
+                    ii = ii + " " + x
+                elif y == 1:
+                    ii = ""
+                y += 1
+            i = ii.strip() 
+        return i
+        pass
+
+    def mod_output(self, i):
+        ## assume single word output 
+        if len(i) > 0:
+            i = i.strip().split("\n")[0] ## pick first sentence
+            #i = i.strip().split(" ")[0]  ## pick first word
+        return i
+        pass 
 
 
 class Timer(Wizard):
@@ -330,8 +357,9 @@ if __name__ == '__main__':
     e.set_update_on_exit(args.update)
     e.set_path(args.path)
 
-    e.build_objects()
     e.load_dict()
+    e.build_objects() ## reverse??
+    
     if args.text_name != None:
         e.set_text_name(args.text_name)
         e.load_txt()

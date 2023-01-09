@@ -84,18 +84,20 @@ if  __name__ == "__main__":
     while True:
         x = input("> ")
 
-        x = PREPEND + "\n\nHuman: " + x.strip() + "\nJane: "
+        xx = PREPEND + "\n\nHuman: " + x.strip() + "\nJane: "
         print('--xxx--', x, '--xxx--', sep="\n")
         #i = e.mod_input(x)
         if args.verbose:
             print(x)
         #z = e.set_input_post_query(x)
         #x = e.mod_input(x) 
-        out = get_gpt(x)
-        print(out, '----', sep="\n")
+        out = get_gpt(xx)
         out = e.mod_output(out)
         print(out)
-        z = e.set_input_post_query(out)
+        x = e.mod_output(x)
+        x = e.mod_input(x)
+        print(out, '----', x, '----', sep="\n")
+        z = e.set_input_post_query(x)
         print(e.exchange['post_query'])
         print(z, 'obj out')
         if z != None:
