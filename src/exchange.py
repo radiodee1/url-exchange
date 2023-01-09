@@ -74,7 +74,8 @@ class Wizard:
     def silent(self):
         for i in self.commands:
             if len(i) > 1:
-                x = self.PREPEND + self.line_in + "\n\nHuman: " + i[0].strip() + " "
+                x = self.PREPEND + self.line_in + ". " + i[0].strip() + " "
+                #x =  self.line_in + ". " + i[0].strip() + " "
                 print("???", x, "???", sep="\n")
                 x = self.query(x)
                 x = self.mod_output(x)
