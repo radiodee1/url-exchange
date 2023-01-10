@@ -105,7 +105,7 @@ if  __name__ == "__main__":
         #x = e.mod_input(x) 
         out = get_gpt3(xx)
         out = e.mod_output(out)
-        print(out)
+        print(out, ':out')
         x = e.mod_output(x)
         x = e.mod_input(x)
         print(out, '----', x, '----', sep="\n")
