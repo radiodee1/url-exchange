@@ -90,7 +90,7 @@ if  __name__ == "__main__":
     e.load()
     #e.set_verbose(False)
     e.set_path(args.path)
-    e.set_query_cmd(get_gpt) ## input or get_gpt
+    e.set_query_cmd(get_gpt3) ## input or get_gpt
     
     print("URL Exchange")
     while True:
