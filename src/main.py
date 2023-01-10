@@ -9,6 +9,7 @@ import argparse
 import sys
 import os 
 import json 
+import openai
 
 from pipeline import PipelineCloud
 
@@ -62,14 +63,25 @@ def get_gpt(question):
         output = ""
     return output
 
+def get_gpt3(question):
+    question = question.strip()
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    completion = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=question,
+        max_tokens=15,
+        temperature=0
+    )
+    output = completion.choices[0].text 
+    print(output)
+    return output
+
+
 if  __name__ == "__main__":
     parser = argparse.ArgumentParser(description="URL Exchange", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--dict_name', default='./../data/dict.pickle', help='name for "dictionary" json input file.')
-    parser.add_argument('--text_name', help='name for additional "csv" input file.')
-    parser.add_argument("--wizards_loud", default="", help="comma sep list of possible loud wizards - added to current list.")
-    parser.add_argument("--wizards_silent", default="radio,timer", help="comma sep list of possible silent wizards - added to current list.")
+    #parser.add_argument('--dict_name', default='./../data/dict.pickle', help='name for "dictionary" json input file.')
+    #parser.add_argument('--text_name', help='name for additional "csv" input file.')
     parser.add_argument("--verbose", action="store_true", help="show debugging output.")
-    parser.add_argument("--update", action="store_true", help="do not skip updating exchange on exit.")
     parser.add_argument("--path", default="./../data/", help="default data directory")
     args = parser.parse_args()
 
@@ -91,7 +103,7 @@ if  __name__ == "__main__":
             print(x)
         #z = e.set_input_post_query(x)
         #x = e.mod_input(x) 
-        out = get_gpt(xx)
+        out = get_gpt3(xx)
         out = e.mod_output(out)
         print(out)
         x = e.mod_output(x)
