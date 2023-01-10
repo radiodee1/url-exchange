@@ -137,7 +137,7 @@ class Exchange:
         self.exchange['wizard-silent'] = {}
         self.exchange['wizard-loud'] = {}
         self.dict_name = "./../data/dict.pickle"
-        self.text_name = ""
+        self.text_name = "./../data/dict.csv"
         self.wizards_silent = ['radio', 'timer']
         self.wizards_loud = []
         self.verbose = False
@@ -172,7 +172,7 @@ class Exchange:
             wizard = self._choose_silent(i.strip())
             self.exchange['wizard-silent'][i.strip()]['object'] = wizard
             self.exchange['wizard-silent'][i.strip()]['object'].set_key(i.strip())
-            self.load_wizard(wizard) 
+            self._load_wizard(wizard) 
         for i in self.wizards_loud:
             self.exchange['wizard-loud'][i.strip()] = {} 
             self.exchange['wizard-loud'][i.strip()]['name'] = i.strip()
@@ -202,7 +202,7 @@ class Exchange:
                     wizard = self._choose_silent(x[1].strip())
                     self.exchange['wizard-silent'][x[1].strip()]['object'] = wizard
                     self.exchange['wizard-silent'][x[1].strip()]['object'].set_key(x[1].strip())
-                    self.load_wizard(wizard) 
+                    self._load_wizard(wizard) 
                 elif x[2].strip() == "wizard-loud":
                     self.exchange['wizard-loud'][x[1].strip()] = {} 
                     self.exchange['wizard-loud'][x[1].strip()]['name'] = x[1].strip()
@@ -235,14 +235,25 @@ class Exchange:
         x = self.path + "/wiz-" + w + ".txt"
         return x 
 
-    def load_wizard(self, obj ):
+    def _load_wizard(self, obj ):
         x = obj.key 
         xx = self._get_wizard_path(x)
         obj.load_commands(xx)
         if self.verbose:
             print("load wizard", x)
             print(obj.commands, ":commands", xx)
- 
+
+    def load(self):
+        if self.update:
+            ## self.load_dict()
+            self.build_objects()
+            #if self.text_name != None:
+            self.load_txt()
+            pass
+        else:
+            self.load_dict()
+            pass 
+
     def set_path(self, p):
         self.path = p
 
@@ -358,13 +369,14 @@ if __name__ == '__main__':
     e.set_update_on_exit(args.update)
     e.set_path(args.path)
 
-    e.load_dict()
-    e.build_objects() ## reverse??
+    #e.load_dict()
+    #e.build_objects() ## reverse??
     
     if args.text_name != None:
         e.set_text_name(args.text_name)
-        e.load_txt()
+        #e.load_txt()
 
+    e.load()
     z = e.set_input_pre_query("some text here from [http://ai-name].")
 
     if args.verbose:
@@ -377,6 +389,6 @@ if __name__ == '__main__':
         print(i)
     z = e.set_input_post_query(i)
     
-    if args.verbose:
+    if args.verbose and z != None:
         print(z.key, type(z))
     e.save_dict()

@@ -75,7 +75,7 @@ if  __name__ == "__main__":
 
     e.set_verbose(True)
     #e.build_objects()
-    e.load_dict()
+    e.load()
     #e.set_verbose(False)
     e.set_path(args.path)
     e.set_query_cmd(get_gpt) ## input or get_gpt
