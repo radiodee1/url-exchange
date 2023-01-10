@@ -76,7 +76,7 @@ class Wizard:
             if len(i) > 1:
                 x = self.PREPEND + self.line_in + ". " + i[0].strip() + " "
                 #x =  self.line_in + ". " + i[0].strip() + " "
-                print("???", x, "???", sep="\n")
+                #print("???", x, "???", sep="\n")
                 x = self.query(x)
                 x = self.mod_output(x)
                 x = self.mod_input(x)
@@ -313,6 +313,14 @@ class Exchange:
             #i = i.strip().split(" ")[0]  ## pick first word
         return i
         pass 
+
+    def detect_input_post_query(self, i):
+        detected = False 
+        for x in self.exchange['post_query']:
+            xx = self.exchange['post_query'][x].strip()
+            if xx in i.lower() or x in i.lower():
+                detected = True
+        return detected
 
     def set_input_post_query(self, i):
         for x in self.exchange['post_query']:

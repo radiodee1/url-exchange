@@ -1,16 +1,11 @@
 #!/usr/bin/python3 
 
-print("here...")
+
 
 from exchange import Exchange 
-
-import codecs
 import argparse
-import sys
 import os 
-import json 
 import openai
-
 from pipeline import PipelineCloud
 
 
@@ -59,6 +54,7 @@ def get_gpt(question):
             output = run["result_preview"][0][0]
         except:
             print(run)
+            pass
     else: 
         output = ""
     return output
@@ -73,7 +69,7 @@ def get_gpt3(question):
         temperature=0
     )
     output = completion.choices[0].text 
-    print(output)
+    #print(output)
     return output
 
 
@@ -85,10 +81,10 @@ if  __name__ == "__main__":
     parser.add_argument("--path", default="./../data/", help="default data directory")
     args = parser.parse_args()
 
-    e.set_verbose(True)
-    #e.build_objects()
+    e.set_verbose(args.verbose)
+    
     e.load()
-    #e.set_verbose(False)
+    
     e.set_path(args.path)
    
     query = get_gpt3
@@ -102,7 +98,8 @@ if  __name__ == "__main__":
         x = input("> ")
 
         xx = PREPEND + "\n\nHuman: " + x.strip() + "\nJane: "
-        print('--xxx--', x, '--xxx--', sep="\n")
+        if args.verbose:
+            print('--xxx--', x, '--xxx--', sep="\n")
         #i = e.mod_input(x)
         if args.verbose:
             print(x)
@@ -110,13 +107,16 @@ if  __name__ == "__main__":
         #x = e.mod_input(x) 
         out = query(xx)
         out = e.mod_output(out)
-        print(out, ':out')
+        print(out) # ':out')
         x = e.mod_output(x)
         x = e.mod_input(x)
-        print(out, '----', x, '----', sep="\n")
-        z = e.set_input_post_query(x) ## x ??
-        print(e.exchange['post_query'], ':post_query')
-        print(z, 'obj out')
-        if z != None:
-            print(z.settings)
+        if args.verbose:
+            print(out, '----', x, '----', sep="\n")
+        if e.detect_input_post_query(x) or e.detect_input_post_query(out):
+            z = e.set_input_post_query(x) ## x ??
+            if args.verbose:
+                print(e.exchange['post_query'], ':post_query')
+                print(z, 'obj out')
+                if z != None:
+                    print(z.settings)
 
