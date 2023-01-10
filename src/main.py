@@ -80,7 +80,7 @@ def get_gpt3(question):
 if  __name__ == "__main__":
     parser = argparse.ArgumentParser(description="URL Exchange", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     #parser.add_argument('--dict_name', default='./../data/dict.pickle', help='name for "dictionary" json input file.')
-    #parser.add_argument('--text_name', help='name for additional "csv" input file.')
+    parser.add_argument('--gptj',action='store_true', help='use gptj instead of gpt3.')
     parser.add_argument("--verbose", action="store_true", help="show debugging output.")
     parser.add_argument("--path", default="./../data/", help="default data directory")
     args = parser.parse_args()
@@ -90,8 +90,13 @@ if  __name__ == "__main__":
     e.load()
     #e.set_verbose(False)
     e.set_path(args.path)
-    e.set_query_cmd(get_gpt3) ## input or get_gpt
-    
+   
+    query = get_gpt3
+    if args.gptj:
+        query = get_gpt 
+
+    e.set_query_cmd(query) ## input or get_gpt
+ 
     print("URL Exchange")
     while True:
         x = input("> ")
@@ -103,14 +108,14 @@ if  __name__ == "__main__":
             print(x)
         #z = e.set_input_post_query(x)
         #x = e.mod_input(x) 
-        out = get_gpt3(xx)
+        out = query(xx)
         out = e.mod_output(out)
         print(out, ':out')
         x = e.mod_output(x)
         x = e.mod_input(x)
         print(out, '----', x, '----', sep="\n")
-        z = e.set_input_post_query(x)
-        print(e.exchange['post_query'])
+        z = e.set_input_post_query(x) ## x ??
+        print(e.exchange['post_query'], ':post_query')
         print(z, 'obj out')
         if z != None:
             print(z.settings)

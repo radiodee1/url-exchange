@@ -319,7 +319,7 @@ class Exchange:
             xx = self.exchange['post_query'][x].strip()
             if self.verbose:
                 print(x, self.exchange['post_query'][x], xx , ':tag')
-            if xx in i:
+            if xx in i.lower() or x in i.lower():
                 if xx.strip() in self.exchange['wizard-silent']:
                     key = self.exchange['wizard-silent'][xx]['object']
                 if xx.strip() in self.exchange['wizard-loud']:
