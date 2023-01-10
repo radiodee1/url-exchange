@@ -11,7 +11,6 @@ from pipeline import PipelineCloud
 
 e = Exchange()
 
-# i = e.mod_input("hi there...")
 
 
 PREPEND = '''{human}: Turn on classic radio.
