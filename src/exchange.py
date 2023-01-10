@@ -155,14 +155,14 @@ class Exchange:
         f.close()
         pass 
 
-    def load_dict(self):
+    def _load_dict(self):
         f = open(self.dict_name, 'rb')
         self.exchange = pickle.load(f)
         f.close()
         #print(self.exchange)
         pass
 
-    def build_objects(self):
+    def _build_objects(self):
         for i in self.wizards_silent:
             if self.verbose:
                 print(i)
@@ -180,7 +180,7 @@ class Exchange:
             self.exchange['wizard-loud'][i.strip()]['object'].set_key(i.strip())
         pass 
 
-    def load_txt(self):
+    def _load_txt(self):
         if self.text_name == "" or self.text_name == None:
             return
         if self.verbose:
@@ -245,13 +245,12 @@ class Exchange:
 
     def load(self):
         if self.update:
-            ## self.load_dict()
-            self.build_objects()
+            self._build_objects()
             #if self.text_name != None:
-            self.load_txt()
+            self._load_txt()
             pass
         else:
-            self.load_dict()
+            self._load_dict()
             pass 
 
     def set_path(self, p):
@@ -369,12 +368,11 @@ if __name__ == '__main__':
     e.set_update_on_exit(args.update)
     e.set_path(args.path)
 
-    #e.load_dict()
-    #e.build_objects() ## reverse??
+    
     
     if args.text_name != None:
         e.set_text_name(args.text_name)
-        #e.load_txt()
+        
 
     e.load()
     z = e.set_input_pre_query("some text here from [http://ai-name].")
