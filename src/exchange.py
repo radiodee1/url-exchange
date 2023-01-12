@@ -144,10 +144,12 @@ class Timer(Wizard):
         super().process()
         seconds = time.time()
         len = 0
+        num = 0
         try:
-            len = float(self.settings['length']) * 60 ## convert mins to seconds 
+            num = float(self.settings['length'].split(" ")[0].strip()) 
         except:
             pass 
+        len = num * 60
         if seconds > self.settings['start-seconds'] + len :
             self.settings['status'] = self.status['DONE']
 
@@ -363,7 +365,7 @@ class Exchange:
                     key = self.exchange['wizard-silent'][xx]['object']
                 if xx.strip() in self.exchange['wizard-loud']:
                     key = self.exchange['wizard-loud'][xx]['object']
-                w = copy.copy(key)
+                w = copy.deepcopy(key)
                 #w.set_key(key)
                 w.set_line(i)
                 if w.is_silent:
@@ -386,13 +388,22 @@ class Exchange:
         return i.strip() 
 
     def get_status(self):
+        num = 0
+        del_list = []
         for i in self.wiz:
             i.process()
             z = i.get_status()
             if z == "DONE":
                 print(i.key, "DONE")
+            print(i, z, i.settings['status'], i.key )
+
             if z == "DONE" or z == "DESTROY":
-                del i 
+                #del i # self.wiz[num]
+                del_list.append(i)
+                #self.wiz.remove(i)
+            num += 1
+        for ii in reversed(del_list):
+            self.wiz.remove(ii)
         return ""
 
 if __name__ == '__main__':
@@ -422,6 +433,7 @@ if __name__ == '__main__':
         
 
     e.load()
+    '''
     z = e.set_input_pre_query("some text here from [http://ai-name].")
 
     if args.verbose:
@@ -436,4 +448,5 @@ if __name__ == '__main__':
     
     if args.verbose and z != None:
         print(z.key, type(z))
+    '''
     e.save_dict()
