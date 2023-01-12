@@ -3,7 +3,7 @@
 import argparse
 import copy
 import dill as pickle
-
+import time
 
 class Wizard:
     def __init__(self):
@@ -17,6 +17,7 @@ class Wizard:
         self.print = None
         self.input = None
         self.settings = { }
+        self.status = {'RUNNING':0, 'DONE':1, 'DESTROY':2, 'GOOD':3, 'BAD':4}
         self.PREPEND = '''{human}: Hi?
 {jane}: Hello there.
 
@@ -69,6 +70,7 @@ class Wizard:
             self.print(i[0].strip()) ## print the question
             x = self.input("> ")     ## wait for the answer
             self.settings[i[1].strip()] = x.strip() 
+        self._set_time()
         pass 
 
     def silent(self):
@@ -81,10 +83,27 @@ class Wizard:
                 x = self.mod_output(x)
                 x = self.mod_input(x)
                 self.settings[i[1].strip()] = x.strip() 
+        self._set_time()
         pass
 
-    def process(self, input):
+    def _set_time(self):
+        #now = date.now()
+        seconds = time.time()
+        print(seconds)
+        self.settings['start-seconds'] = seconds
+        self.settings['status'] = self.status['RUNNING']
+
+    def process(self):
         return input
+
+    def get_status(self):
+        r = ''
+        for i in self.status:
+            if self.settings['status'] == self.status[i] :
+                r = i
+        print(r, self.settings)
+        return r 
+        
 
     def query(self, input):
         return input
@@ -121,6 +140,17 @@ class Timer(Wizard):
         self.key = 'timer'
         self.is_silent = True
 
+    def process(self):
+        super().process()
+        seconds = time.time()
+        len = 0
+        try:
+            len = float(self.settings['length']) * 60 ## convert mins to seconds 
+        except:
+            pass 
+        if seconds > self.settings['start-seconds'] + len :
+            self.settings['status'] = self.status['DONE']
+
 
 class Radio(Wizard):
     def __init__(self):
@@ -145,6 +175,7 @@ class Exchange:
         self.query = None
         self.classes = []
         self.path = "./../data/"
+        self.wiz = []
 
     def save_dict(self):
         if self.update == False:
@@ -339,6 +370,7 @@ class Exchange:
                     w.silent()
                 elif not w.is_silent:
                     w.loud()
+                self.wiz.append(w)
                 if self.verbose:
                     print(w.settings)
                 return w
@@ -354,6 +386,13 @@ class Exchange:
         return i.strip() 
 
     def get_status(self):
+        for i in self.wiz:
+            i.process()
+            z = i.get_status()
+            if z == "DONE":
+                print(i.key, "DONE")
+            if z == "DONE" or z == "DESTROY":
+                del i 
         return ""
 
 if __name__ == '__main__':

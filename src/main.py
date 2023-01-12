@@ -7,7 +7,7 @@ import argparse
 import os 
 import openai
 from pipeline import PipelineCloud
-
+import time 
 
 e = Exchange()
 
@@ -118,4 +118,5 @@ if  __name__ == "__main__":
                 print(z, 'obj out')
                 if z != None:
                     print(z.settings)
+        e.get_status()
 
