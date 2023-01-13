@@ -5,6 +5,8 @@ import copy
 import dill as pickle
 import time
 from word2number import w2n 
+import string
+from prepend import PREPEND
 
 class Wizard:
     def __init__(self):
@@ -21,20 +23,9 @@ class Wizard:
         self.input = None
         self.settings = { }
         self.status = {'RUNNING':0, 'DONE':1, 'DESTROY':2, 'GOOD':3, 'BAD':4}
-        self.PREPEND = '''{human}: Hi?
-{jane}: Hello there.
+        self.XPREPENDX = PREPEND['include-no-url'] 
 
-{human}: Do you like candy?
-{jane}: Yes I like candy.
-
-{human}: What is your favorite color?
-{jane}: My favorite color is blue.
-
-{human}: How old are you?
-{jane}: I am 21 years old.
-
-{human}: '''.format(human="Human", jane="Jane")
-
+        print("--Wizard--", self.XPREPENDX)
 
     def set_process_cmd(self, p): ## what for??
         self.process = p          ## what for?? 
@@ -58,7 +49,7 @@ class Wizard:
         self.active = a 
 
     def set_prepend(self, p):
-        self.PREPEND = p
+        self.XPREPENDX = p
 
     def set_identity(self, jane="Jane", human="Human"):
         self.ident_ai = jane
@@ -86,12 +77,13 @@ class Wizard:
     def silent(self):
         for i in self.commands:
             if len(i) > 1:
-                x = self.PREPEND + self.line_in + ".\nJane: " + i[0].strip() + " "
+                x = self.XPREPENDX + self.line_in + ".\nJane: " + i[0].strip() + " "
                 #x =  self.line_in + ". " + i[0].strip() + " "
                 #print("???", x, "???", sep="\n")
                 x = self.query(x)
                 x = self.mod_output(x)
                 x = self.mod_input(x)
+                x = x.translate(str.maketrans("", "", string.punctuation))
                 try:
                     ## if x is a number, try to convert to int or int in string
                     words = w2n.word_to_num(x.split(" ")[0].strip())

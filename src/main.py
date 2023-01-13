@@ -8,29 +8,11 @@ import os
 import openai
 from pipeline import PipelineCloud
 import time
-from word2number import w2n 
+from word2number import w2n
+import string
+from prepend import PREPEND
 
 e = Exchange()
-
-
-
-PREPEND = '''{human}: Turn on classic radio.
-{jane}: Set radio http://radio 
-
-{human}: Set a timer for five minutes.
-{jane}: Set timer http://timer 
-
-{human}: Hi?
-{jane}: Hello there.
-
-{human}: Do you like candy?
-{jane}: Yes I like candy.
-
-{human}: What is your favorite color?
-{jane}: My favorite color is blue.
-
-{human}: How old are you?
-{jane}: I am 21 years old.'''.format(human="Human", jane="Jane")
 
 
 def get_gpt(question):
@@ -97,7 +79,10 @@ if  __name__ == "__main__":
     while True:
         x = input("> ")
 
-        xx = PREPEND + "\n\nHuman: " + x.strip() + "\nJane: "
+        XPREPENDX = PREPEND['include-url']
+        print("--Main--", XPREPENDX)
+
+        xx = XPREPENDX + "\n\nHuman: " + x.strip() + "\nJane: "
         if args.verbose:
             print('--xxx--', x, '--xxx--', sep="\n")
         #i = e.mod_input(x)
