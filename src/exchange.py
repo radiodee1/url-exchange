@@ -4,11 +4,14 @@ import argparse
 import copy
 import dill as pickle
 import time
+from word2number import w2n 
 
 class Wizard:
     def __init__(self):
         self.active = False
         self.is_silent = True 
+        self.ident_ai = "Jane"
+        self.ident_human = "Human"
         self.commands = []
         #self.process = None 
         #self.query = None 
@@ -54,6 +57,13 @@ class Wizard:
     def set_active(self, a):
         self.active = a 
 
+    def set_prepend(self, p):
+        self.PREPEND = p
+
+    def set_identity(self, jane="Jane", human="Human"):
+        self.ident_ai = jane
+        self.ident_human = human 
+
     def load_commands(self, filename):
         f = open(filename, 'r')
         lines = f.readlines()
@@ -76,13 +86,19 @@ class Wizard:
     def silent(self):
         for i in self.commands:
             if len(i) > 1:
-                x = self.PREPEND + self.line_in + ". " + i[0].strip() + " "
+                x = self.PREPEND + self.line_in + ".\nJane: " + i[0].strip() + " "
                 #x =  self.line_in + ". " + i[0].strip() + " "
                 #print("???", x, "???", sep="\n")
                 x = self.query(x)
                 x = self.mod_output(x)
                 x = self.mod_input(x)
-                self.settings[i[1].strip()] = x.strip() 
+                try:
+                    ## if x is a number, try to convert to int or int in string
+                    words = w2n.word_to_num(x.split(" ")[0].strip())
+                    x = str(words)
+                except:
+                    pass ## not everything should be a number...
+                self.settings[i[1].strip().lower()] = x.strip().lower() 
         self._set_time()
         pass
 
@@ -144,11 +160,18 @@ class Timer(Wizard):
         super().process()
         seconds = time.time()
         len = 0
-        num = 0
+        num = None
         try:
             num = float(self.settings['length'].split(" ")[0].strip()) 
         except:
             pass 
+        if num == None:
+            try:
+                words = w2n.word_to_num(self.settings['length'].split(" ")[0].strip())
+                num = float(words)
+            except :
+                num = 1 
+                pass
         len = num * 60
         if seconds > self.settings['start-seconds'] + len :
             self.settings['status'] = self.status['DONE']

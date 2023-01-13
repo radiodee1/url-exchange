@@ -7,7 +7,8 @@ import argparse
 import os 
 import openai
 from pipeline import PipelineCloud
-import time 
+import time
+from word2number import w2n 
 
 e = Exchange()
 

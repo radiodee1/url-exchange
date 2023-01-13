@@ -9,3 +9,5 @@ pipeline-ai==0.0.50
 
 dill==0.3.5.1
 openai==0.26.0 
+
+word2number==1.1 
