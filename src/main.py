@@ -80,7 +80,7 @@ if  __name__ == "__main__":
         x = input("> ")
 
         XPREPENDX = PREPEND['include-url']
-        print("--Main--", XPREPENDX)
+        #print("--Main--", XPREPENDX)
 
         xx = XPREPENDX + "\n\nHuman: " + x.strip() + "\nJane: "
         if args.verbose:

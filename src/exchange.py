@@ -25,7 +25,7 @@ class Wizard:
         self.status = {'RUNNING':0, 'DONE':1, 'DESTROY':2, 'GOOD':3, 'BAD':4}
         self.XPREPENDX = PREPEND['include-no-url'] 
 
-        print("--Wizard--", self.XPREPENDX)
+        #print("--Wizard--", self.XPREPENDX)
 
     def set_process_cmd(self, p): ## what for??
         self.process = p          ## what for?? 
