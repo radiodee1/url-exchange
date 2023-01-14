@@ -74,7 +74,7 @@ I think that the models, especially GPTJ, is trained on material taken from the 
 ## Prompt  
 We add these specific urls to our prompt. We put them at the beginning. There is one of these urls for every task we want the model to perform. 
 
-* We expect the model to answer with the particular url whenever we suggest that the model should do one of our pre-determined tasks. This is called our url exchange. We exchange the url for a specific programmatic action.
+* We expect the model to answer with the particular url whenever we suggest that the model should do one of our pre-determined tasks. This is called our 'url exchange.' We exchange the url for a specific programmatic action.
 * We ask the chatbot to answer questions about the single statement we collect that caused the model to use the url. We call this a 'Wizard' as it is modeled after the Wizards that are common in Windows operating systems when you install software. 
 
 ## URLs In Generative Models 
@@ -83,4 +83,6 @@ Strangely the URL copying ability is not as strong in GPT3. For GPT3 we do our s
 While the GPT3 model does not always repeat the full url, it does repeat the simpler word ('timer') and it answers the question set about the timer very well. It answers the questions better than the GPTJ model.
 
 ## Wizards 
-The Wizards are series of questions that are posed to the model. The prompt during these questions includes the user's questions asking the model to do something. The model's answer is recorded but the questions are disgarded. The wizard questions are not added to the prompt history.
+The Wizards are series of questions that are posed to the model. The name Wizard is just a programing name. It's just the name I used for the section of the code that questions about the thing that the user wants the model to do. The prompt during these questions includes the user's questions asking the model to do something. The model's answer is recorded but the questions are disgarded. The wizard questions are not added to the prompt history.
+
+The answers to these Wizard questions go twards performing the special task. For example, the timer questions ask what the timer length is and what is the name for it.
