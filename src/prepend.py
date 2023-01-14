@@ -16,10 +16,10 @@ PREPEND1 = '''{human}: Hi?
 {human}: '''.format(human="Human", jane="Jane")
 
 PREPEND2 = '''{human}: Turn on classic radio.
-{jane}: Set radio http://radio 
+{jane}: Say http://radio to start radio. 
 
 {human}: Set a timer for five minutes.
-{jane}: Set timer http://timer 
+{jane}: Say http://timer to start timer.
 
 {human}: Hi?
 {jane}: Hello there.

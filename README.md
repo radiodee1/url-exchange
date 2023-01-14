@@ -69,12 +69,18 @@ Jane: I am 21 years old.
 
 I think that the models, especially GPTJ, is trained on material taken from the web. One of these things in the corpus is complete urls. I think the model is trained on complete urls and so it knows that they need to be reproduced letter for letter.
 
-## Problems
-When you use these models you don't have to prompt the model in exactly the same way every time. You can address the model with lines like 'Hello there' or 'How are you'. Both of these are general greetings and they will be treated similarly. At the same time, the output will be human-readable, but not easy to predict. In our example, the outputs could be 'hi' or 'I'm fine'. Both outputs are possible, along with a number of others. The outputs are slighlty unpredictable.
-
-We want to edit our prompt so that when, for example, we want to turn on the radio, the model will understand and will signal us somehow with a predictable reply.
-
-## URLs in Generative models 
-When you use GPT models you can sometimes predict what the model will answer. Sometimes you want to do something like launching code when the model broaches a certian subject.
 
 
+## Prompt  
+We add these specific urls to our prompt. We put them at the beginning. There is one of these urls for every task we want the model to perform. 
+
+* We expect the model to answer with the particular url whenever we suggest that the model should do one of our pre-determined tasks. This is called our url exchange. We exchange the url for a specific programmatic action.
+* We ask the chatbot to answer questions about the single statement we collect that caused the model to use the url. We call this a 'Wizard' as it is modeled after the Wizards that are common in Windows operating systems when you install software. 
+
+## URLs In Generative Models 
+Strangely the URL copying ability is not as strong in GPT3. For GPT3 we do our search for the url, but also for the english word that has the same representation as the url. For example, when we want to detect when the GPT3 model launches a timer, we search for 'http://timer' and also 'timer', since the word for the action can easily be designated as 'timer'.
+
+While the GPT3 model does not always repeat the full url, it does repeat the simpler word ('timer') and it answers the question set about the timer very well. It answers the questions better than the GPTJ model.
+
+## Wizards 
+The Wizards are series of questions that are posed to the model. The prompt during these questions includes the user's questions asking the model to do something. The model's answer is recorded but the questions are disgarded. The wizard questions are not added to the prompt history.
