@@ -42,6 +42,33 @@ With this system you can get the models to answer your questions, but the outcom
 ## Home-Assistants
 I had the experience of going to someone's house and observing them using their Alexa or Google-Home-Assistant devices. I was surprised at the things that the device could do. You could set timers. You could play radio stations. I suspect you could ask it to search the web for you. I wanted to do some of these things in my language models.
 
+Imagine you wanted to instruct the model to turn on a radio. You might say 'Turn on the radio' and the model might reply 'OK, I'll turn on the radio'. It might reply 'The radio will be turned on' or just 'radio'. What we want is a predictable output that we can process. GPT models are great at generating text, but the text is not always the same. Computers can process text, but they are best at the job when they get exactly what they expect. It would be easier for the computer if the text were always the same.
+
+What I do is I add a custom question/answer pair for every outcome that I want the model to detect. The question is something like 'Turn on the radio' and the answer is essentially a url. It seems that the models are all able to reply to the question with the exact url, spelled exactly as specified in the prompt. This ability to answer with the exact url is even more evident in the smaller GPT models. An example is below.
+
+```
+Human: Turn on classic radio.
+Jane: Set radio http://radio 
+
+Human: Set a timer for five minutes.
+Jane: Set timer http://timer 
+
+Human: Hi?
+Jane: Hello there.
+
+Human: Do you like candy?
+Jane: Yes I like candy.
+
+Human: What is your favorite color?
+Jane: My favorite color is blue.
+
+Human: How old are you?
+Jane: I am 21 years old.
+
+```
+
+I think that the models, especially GPTJ, is trained on material taken from the web. One of these things in the corpus is complete urls. I think the model is trained on complete urls and so it knows that they need to be reproduced letter for letter.
+
 ## Problems
 When you use these models you don't have to prompt the model in exactly the same way every time. You can address the model with lines like 'Hello there' or 'How are you'. Both of these are general greetings and they will be treated similarly. At the same time, the output will be human-readable, but not easy to predict. In our example, the outputs could be 'hi' or 'I'm fine'. Both outputs are possible, along with a number of others. The outputs are slighlty unpredictable.
 
