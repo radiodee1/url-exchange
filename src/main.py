@@ -15,6 +15,15 @@ from prepend import PREPEND
 e = Exchange()
 
 
+
+def add_to_q_history(h, HISTORY):
+    HISTORY += "\n\nHuman: " + h
+    return HISTORY
+
+def add_to_a_history(h, HISTORY):
+    HISTORY += "\nJane: " + h
+    return HISTORY
+
 def get_gpt(question):
     prompt = question.strip()
     pipeline_token = os.environ['GPT_ETC_GPTJ_MODEL']
@@ -74,17 +83,21 @@ if  __name__ == "__main__":
         query = get_gpt 
 
     e.set_query_cmd(query) ## input or get_gpt
- 
+
+    HISTORY = ""
+
     print("URL Exchange")
     while True:
         x = input("> ")
 
         XPREPENDX = PREPEND['include-url']
         #print("--Main--", XPREPENDX)
-
+        XPREPENDX += HISTORY
         xx = XPREPENDX + "\n\nHuman: " + x.strip() + "\nJane: "
+        HISTORY = add_to_q_history(x, HISTORY)
+
         if args.verbose:
-            print('--xxx--', x, '--xxx--', sep="\n")
+            print('--xxx--', xx, '--xxx--', sep="\n")
         #i = e.mod_input(x)
         if args.verbose:
             print(x)
@@ -92,9 +105,11 @@ if  __name__ == "__main__":
         #x = e.mod_input(x) 
         out = query(xx)
         out = e.mod_output(out)
-        print(out) # ':out')
+        HISTORY = add_to_a_history(out, HISTORY)
+        print(out) 
         x = e.mod_output(x)
         x = e.mod_input(x)
+        
         if args.verbose:
             print(out, '----', x, '----', sep="\n")
         if e.detect_input_post_query(x) or e.detect_input_post_query(out):
