@@ -56,7 +56,7 @@ def get_gpt3(question):
     completion = openai.Completion.create(
         model="text-davinci-003",
         prompt=question,
-        max_tokens=15,
+        max_tokens=64,
         temperature=0
     )
     output = completion.choices[0].text 
@@ -104,6 +104,8 @@ if  __name__ == "__main__":
         #z = e.set_input_post_query(x)
         #x = e.mod_input(x) 
         out = query(xx)
+        if args.verbose:
+            print("--- long list ---", out, "--- end ---", sep="\n")
         out = e.mod_output(out)
         HISTORY = add_to_a_history(out, HISTORY)
         print(out) 

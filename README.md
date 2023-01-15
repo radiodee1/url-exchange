@@ -1,6 +1,6 @@
 # url-exchange
 * Comparing GPTJ with GPT3 using some prompt engineering.
-* Introduce something called a 'URL-Exchange.'
+* Test something called a 'URL-Exchange' that does not work well.
 
 ## History
 * In 2020 I worked on my thesis project that included some experiments with GPT2. These models were installed on Raspberry Pi computers. This code was mostly python. Speech to text and text to speech were attempted.
@@ -81,6 +81,8 @@ We add these specific urls to our prompt. We put them at the beginning. There is
 Strangely the URL copying ability is not as strong in GPT3. For GPT3 we do our search for the url, but also for the english word that has the same representation as the url. For example, when we want to detect when the GPT3 model launches a timer, we search for 'http://timer' and also 'timer', since the word for the action can easily be designated as 'timer'.
 
 While the GPT3 model does not always repeat the full url, it does repeat the simpler word ('timer') and it answers the question set about the timer very well. It answers the questions better than the GPTJ model.
+
+It turns out that neither model repeats the url totally faithfully. This is a failure in our original concept. If we choose to search for both the url and the english equivelent we catch the hint that the model is making, and then we can launch the Wizard properly. Of course, if we follow this new search method, we probably should call the project a 'Text Exchange' or a 'Keyword Exchange'.
 
 ## URL Exchange - Wizards 
 The Wizards are series of questions that are posed to the model. The name Wizard is just a programing name. It's just the name I used for the section of the code that questions about the thing that the user wants the model to do. The prompt during these questions includes the user's questions asking the model to do something. The model's answer is recorded but the questions are disgarded. The wizard questions are not added to the prompt history.
