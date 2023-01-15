@@ -67,7 +67,7 @@ Jane: I am 21 years old.
 
 ```
 
-I think that the models, especially GPTJ, is trained on material taken from the web. One of these things in the corpus is complete urls. I think the model is trained on complete urls and so it knows that they need to be reproduced letter for letter.
+Originally I thought that the models, especially GPTJ, were trained on material taken from the web. One of the things common in the corpus is complete urls. I thought the model was trained on complete urls and so it knows that they need to be reproduced letter for letter. This may not be true.
 
 
 
