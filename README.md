@@ -77,7 +77,7 @@ We add these specific urls to our prompt. We put them at the beginning. There is
 * We expect the model to answer with the particular url whenever we suggest that the model should do one of our pre-determined tasks. This is called our 'url exchange.' We exchange the url for a specific programmatic action.
 * We ask the chatbot to answer questions about the single statement we collect that caused the model to use the url. We call this a 'Wizard' as it is modeled after the Wizards that are common in Windows operating systems when you install software. 
 
-## URL Exchange - Different Models 
+## URL Exchange vs. Keyword Exchange 
 Strangely the URL copying ability is not as strong in GPT3. For GPT3 we do our search for the url, but also for the english word that has the same representation as the url. For example, when we want to detect when the GPT3 model launches a timer, we search for 'http://timer' and also 'timer', since the word for the action can easily be designated as 'timer'.
 
 While the GPT3 model does not always repeat the full url, it does repeat the simpler word ('timer') and it answers the question set about the timer very well. It answers the questions better than the GPTJ model.
