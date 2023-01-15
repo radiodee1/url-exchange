@@ -42,9 +42,9 @@ With this system you can get the models to answer your questions, but the outcom
 ## Home-Assistants
 I had the experience of going to someone's house and observing them using their Alexa or Google-Home-Assistant devices. I was surprised at the things that the device could do. You could set timers. You could play radio stations. I suspect you could ask it to search the web for you. I wanted to do some of these things in my language models.
 
-Imagine you wanted to instruct the model to turn on a radio. You might say 'Turn on the radio' and the model might reply 'OK, I'll turn on the radio'. It might reply 'The radio will be turned on' or just 'radio'. What we want is a predictable output that we can process. GPT models are great at generating text, but the text is not always the same. Computers can process text, but they are best at the job when they get exactly what they expect. It would be easier for the computer if the text were always the same.
+Imagine you wanted to instruct the model to turn on a radio. You might say 'Turn on the radio' and the model might reply 'OK, I'll turn on the radio'. It might reply 'The radio will be turned on' or just 'radio'. What we want is a predictable output that we can process. GPT models are great at generating text, but the text is not always the same. Computers can process this text, but they are best at the job when they get exactly what they expect. It would be easier for the computer if the text were always the same. This was the inspiration for the URL Exchange.
 
-What I do is I add a custom question/answer pair for every outcome that I want the model to detect. The question is something like 'Turn on the radio' and the answer is essentially a url. It seems that most models are able to reply to the question with the exact url, spelled exactly as specified in the prompt. This ability to answer with the exact url is even more evident in the smaller GPT models. An example is below.
+What I did is I added a custom question/answer pair for every outcome that I want the model to detect. The question is something like 'Turn on the radio' and the answer is essentially a url. What I wanted was for the models to reply to the question with the exact url, spelled exactly as specified in the prompt. This ability to answer with the exact url is more evident in the smaller GPT models. An example is below.
 
 ```
 Human: Turn on classic radio.
@@ -69,13 +69,11 @@ Jane: I am 21 years old.
 
 Originally I thought that the models, especially GPTJ, were trained on material taken from the web. One of the things common in the corpus is complete urls. I thought the model was trained on complete urls and so it knows that they need to be reproduced letter for letter. This may not be true.
 
-
-
 ## URL Exchange - Prompt  
 We add these specific urls to our prompt. We put them at the beginning. There is one of these urls for every task we want the model to perform. 
 
 * We expect the model to answer with the particular url whenever we suggest that the model should do one of our pre-determined tasks. This is called our 'url exchange.' We exchange the url for a specific programmatic action.
-* We ask the chatbot to answer questions about the single statement we collect that caused the model to use the url. We call this a 'Wizard' as it is modeled after the Wizards that are common in Windows operating systems when you install software. 
+* We ask the chatbot to answer questions about the single statement we collect that caused the model to use the url. We call this a 'Wizard' as it is modeled after the Wizards that are common in Windows operating systems when you install software. The Wizard poses questions to the model, and the questions are not visible to the user. 
 
 ## URL Exchange vs. Keyword Exchange 
 Strangely the URL copying ability is not as strong in GPT3. For GPT3 we do our search for the url, but also for the english word that has the same representation as the url. For example, when we want to detect when the GPT3 model launches a timer, we search for 'http://timer' and also 'timer', since the word for the action can easily be designated as 'timer'.
