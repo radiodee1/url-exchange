@@ -16,4 +16,4 @@ RUN chmod a+x do_10_start_main.sh
 
 RUN pwd && ls  
 
-CMD  /bin/sh ./do_10_start_main.sh
+CMD  /bin/sh ./do_10_start_main.sh --gptj

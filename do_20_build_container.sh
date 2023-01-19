@@ -1,1 +1,1 @@
-docker build -t url_exchange .
+sudo docker build -t url_exchange .
