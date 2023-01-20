@@ -167,6 +167,8 @@ class Timer(Wizard):
         len = num * 60
         if seconds > self.settings['start-seconds'] + len :
             self.settings['status'] = self.status['DONE']
+        else:
+            self.settings['seconds-left'] = self.settings['start-seconds'] + len - seconds
 
 
 class Radio(Wizard):
@@ -448,20 +450,4 @@ if __name__ == '__main__':
         
 
     e.load()
-    '''
-    z = e.set_input_pre_query("some text here from [http://ai-name].")
-
-    if args.verbose:
-        print(z)
-
-    e.set_query_cmd(input)
-
-    i = e.mod_input("Human : some text here for http://timer here.")
-    if args.verbose:
-        print(i)
-    z = e.set_input_post_query(i)
-    
-    if args.verbose and z != None:
-        print(z.key, type(z))
-    '''
     e.save_dict()

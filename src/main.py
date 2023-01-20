@@ -11,6 +11,8 @@ import time
 from word2number import w2n
 import string
 from prepend import PREPEND
+from threading import Thread, Event
+
 
 e = Exchange()
 
@@ -63,15 +65,34 @@ def get_gpt3(question):
     #print(output)
     return output
 
+def get_status_thread():
+    num = 0 
+    while True:
+        if not event.is_set():
+            time.sleep(10)
+            print(num, 'thread', end=' ')
+            if not event.is_set():
+                e.get_status()
+                num += 1 
+            #print("*> ", end='')
+        pass 
+
 
 if  __name__ == "__main__":
     parser = argparse.ArgumentParser(description="URL Exchange", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    #parser.add_argument('--dict_name', default='./../data/dict.pickle', help='name for "dictionary" json input file.')
+    parser.add_argument('--timer', action='store_true', help='Use timer for wizard output.')
     parser.add_argument('--gptj',action='store_true', help='use gptj instead of gpt3.')
     parser.add_argument("--verbose", action="store_true", help="show debugging output.")
     parser.add_argument("--path", default="./../data/", help="default data directory")
     args = parser.parse_args()
+    
+    event = Event()
 
+    if args.timer:
+        t1 = Thread(target=get_status_thread)
+        t1.start()
+
+    num = 0 
     e.set_verbose(args.verbose)
     
     e.load()
@@ -88,8 +109,10 @@ if  __name__ == "__main__":
 
     print("URL Exchange")
     while True:
+        #event.set()
         x = input("> ")
-
+        if args.timer:
+            event.set()
         XPREPENDX = PREPEND['include-url']
         #print("--Main--", XPREPENDX)
         XPREPENDX += HISTORY
@@ -121,5 +144,9 @@ if  __name__ == "__main__":
                 print(z, 'obj out')
                 if z != None:
                     print(z.settings)
-        e.get_status()
+        print(num, "num")
+        #e.get_status()
+        num += 1 
+        if args.timer:
+            event.clear()
 
