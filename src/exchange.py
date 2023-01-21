@@ -6,6 +6,7 @@ import dill as pickle
 import time
 from word2number import w2n 
 import string
+import json
 from prepend import PREPEND
 
 class Wizard:
@@ -97,7 +98,7 @@ class Wizard:
     def _set_time(self):
         #now = date.now()
         seconds = time.time()
-        print(seconds)
+        #print(seconds)
         self.settings['start-seconds'] = seconds
         self.settings['status'] = self.status['RUNNING']
 
@@ -109,7 +110,7 @@ class Wizard:
         for i in self.status:
             if self.settings['status'] == self.status[i] :
                 r = i
-        print(r, self.settings)
+        #print(r, self.settings)
         return r 
         
 
@@ -405,15 +406,17 @@ class Exchange:
         return i.strip() 
 
     def get_status(self):
+        out = ""
         num = 0
         del_list = []
         for i in self.wiz:
             i.process()
             z = i.get_status()
             if z == "DONE":
-                print(i.key, "DONE")
-            print(i, z, i.settings['status'], i.key )
-
+                #print(i.key, "DONE")
+                out += str(i.key) + " DONE \n"
+            #print(i, z, i.settings['status'], i.key )
+            out += "[" + str(z) + " " + str(i.settings) + "]\n"
             if z == "DONE" or z == "DESTROY":
                 #del i # self.wiz[num]
                 del_list.append(i)
@@ -421,7 +424,7 @@ class Exchange:
             num += 1
         for ii in reversed(del_list):
             self.wiz.remove(ii)
-        return ""
+        return out 
 
 if __name__ == '__main__':
     e = Exchange()

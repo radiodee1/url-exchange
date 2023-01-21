@@ -10,6 +10,7 @@ from pipeline import PipelineCloud
 import time
 from word2number import w2n
 import string
+import json 
 from prepend import PREPEND
 from threading import Thread, Event
 
@@ -69,10 +70,11 @@ def get_status_thread():
     num = 0 
     while True:
         if not event.is_set():
-            time.sleep(10)
-            print(num, 'thread', end=' ')
+            time.sleep(20)
+            #print(num, 'thread', end=' ')
             if not event.is_set():
-                e.get_status()
+                out = e.get_status()
+                print(out)
                 num += 1 
             #print("*> ", end='')
         pass 
@@ -144,7 +146,7 @@ if  __name__ == "__main__":
                 print(z, 'obj out')
                 if z != None:
                     print(z.settings)
-        print(num, "num")
+        #print(num, "num")
         #e.get_status()
         num += 1 
         if args.timer:
