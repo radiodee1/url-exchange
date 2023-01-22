@@ -86,3 +86,9 @@ It turns out that neither model repeats the url totally faithfully. This is a fa
 The Wizards are series of questions that are posed to the model. The name Wizard is just a programing name. It's just the name I used for the section of the code that questions about the thing that the user wants the model to do. The prompt during these questions includes the user's questions asking the model to do something. The model's answer is recorded but the questions are disgarded. The wizard questions are not added to the prompt history.
 
 The answers to these Wizard questions go twards performing the special task. For example, the timer questions ask what the timer length is and what is the name for it.
+
+## Requirements
+I am working on Ubuntu 22.10, and Python 3.10. I install these files.
+```
+sudo apt install -y rustc cargo python3.10-dev python3-pip python3-pip-whl notcurses-bin python3-notcurses 
+```

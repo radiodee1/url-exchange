@@ -26,28 +26,38 @@ curses.nocbreak()
 curses.endwin()
 
 def position_top():
-    sys.stdout.write("\x1b[f")
+    #sys.stdout.write("\x1b[f")
+    #os.system('clear')
+    print("\033[%d;%dH" % (0, 0), end='')
+
     for _ in range(2):
         for _ in range(cols - 1):
             print(' ', end='')
-    sys.stdout.write("\x1b[f> ")
-    #print('> ')
+    print("\033[%d;%dH" % (0, 0) + "> ", end='')
 
 
-def position_mid(x):
-    num = 0
-    while num < x:
-        print()
-        num += 1 
+
+def position_mid(y):
+    print("\033[%d;%dH" % (y, 0), end='')
 
 def position_clear(x,y):
-    #stdscr = curses.initscr()
-    #rows, cols = stdscr.getmaxyx()
     x = min(x, cols)
     for _ in range(y):
         for _ in range(x):
             print(' ', end='')
+            #sys.stdout.write(' ')
         print()
+
+def position_line(y):
+    y = min(y, rows)
+    print("\033[%d;%dH" % (y, 0), end='')
+
+    for _ in range(cols - 1):
+        #sys.stdout.write('_')
+        print('_', end='')
+    print("\033[%d;%dH" % (0, 0) + "> ", end='')
+
+    #sys.stdout.write('\x1b[f> ')
 
 def add_to_q_history(h, HISTORY):
     HISTORY += "\n\nHuman: " + h
@@ -58,6 +68,15 @@ def add_to_a_history(h, HISTORY):
     return HISTORY
 
 def get_gpt(question):
+    if args.timer:
+        #position_mid(6)
+        position_mid(6)
+        position_clear(200, 4)
+        position_top()
+        position_mid(6)
+
+
+    output = ""
     prompt = question.strip()
     pipeline_token = os.environ['GPT_ETC_GPTJ_MODEL']
     pipeline_key = os.environ['GPT_ETC_GPTJ_KEY']
@@ -81,9 +100,18 @@ def get_gpt(question):
             pass
     else: 
         output = ""
+    #position_top()
     return output
 
 def get_gpt3(question):
+    if args.timer:
+        #position_mid(6)
+        position_mid(6)
+        position_clear(200, 4)
+        position_top()
+        position_mid(6)
+
+
     question = question.strip()
     openai.api_key = os.getenv("OPENAI_API_KEY")
     completion = openai.Completion.create(
@@ -94,6 +122,7 @@ def get_gpt3(question):
     )
     output = completion.choices[0].text 
     #print(output)
+    #position_top()
     return output
 
 def get_status_thread(q):
@@ -101,22 +130,30 @@ def get_status_thread(q):
     while True:
         #if not event.is_set():
         time.sleep(10)
+        out = e.get_status().strip()
         #print(num, 'thread', end=' ')
         if not event.is_set():
-            out = e.get_status()
             #q.put(out)
-            position_top()
-            position_mid(10)
-            position_clear(200, 10)
-            position_top()
-            position_mid(10)
-            print(out)
-            position_top()
-            #position_mid(1)
-            position_clear(200, 5)
-            position_top()
-            #position_mid(1)
-            num += 1 
+            if len(out) != 0:
+                position_top()
+                position_mid(11)
+                position_clear(200, 9)
+                position_top()
+                position_mid(11)
+                print(out)
+                #sys.stdout.write(out)
+                position_top()
+                #position_mid(1)
+                #position_clear(200, 5)
+                #position_top()
+
+                #position_line(10)
+                #position_line(5)
+                #position_line(20)
+
+                #position_mid(11)
+                #position_top()
+        num += 1 
         #print("*> ", end='')
         pass 
 
@@ -153,14 +190,21 @@ if  __name__ == "__main__":
     HISTORY = ""
 
     print("URL Exchange")
+    os.system('clear')
     position_top()
     position_clear(200, 20)
-    position_top()
-    
+ 
+    position_line(10)
+    position_line(5)
+    position_line(20)
+            #   
     while True:
-        position_top()
-        position_clear(200, 4)
-        position_top()
+        #position_top()
+        #position_line(10)
+        #position_line(5)
+        #position_line(20)
+         
+        #position_top()
         x = input()
         #if args.timer:
         #    event.set()
@@ -173,29 +217,32 @@ if  __name__ == "__main__":
         if args.verbose:
             print('--xxx--', xx, '--xxx--', sep="\n")
             print(x)
+
+        if args.timer:
+            event.set()
+
+        position_mid(6)
+        position_clear(200, 4)
+        position_top()
+        position_mid(6)
+
         out = query(xx)
         if args.verbose:
             print("--- long list ---", out, "--- end ---", sep="\n")
         out = e.mod_output(out)
         HISTORY = add_to_a_history(out, HISTORY)
-        if args.timer:
-            event.set()
+
+        position_mid(6)
+        position_clear(200, 4)
         position_top()
         position_mid(6)
-        position_clear(200, 5)
-        position_top()
-        position_mid(6)
+
         print(out)
+        position_top()
+
         if args.timer:
             event.clear()
-        '''
-        if args.timer:
-            position_top()
-            position_mid(10)
-            while q.qsize() > 0:
-                out_q = q.get()
-                print('--', out_q, '--', sep='\n')
-        '''
+        
         x = e.mod_output(x)
         x = e.mod_input(x)
         
