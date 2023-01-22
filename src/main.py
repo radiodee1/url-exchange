@@ -12,11 +12,42 @@ from word2number import w2n
 import string
 from prepend import PREPEND
 from threading import Thread, Event
-
+from queue import Queue
+import curses 
+#from curses.textpad import Textbox, rectangle 
+import sys 
 
 e = Exchange()
 
+stdscr = curses.initscr()
+rows, cols = stdscr.getmaxyx()
+curses.echo()
+curses.nocbreak()
+curses.endwin()
 
+def position_top():
+    sys.stdout.write("\x1b[f")
+    for _ in range(2):
+        for _ in range(cols - 1):
+            print(' ', end='')
+    sys.stdout.write("\x1b[f> ")
+    #print('> ')
+
+
+def position_mid(x):
+    num = 0
+    while num < x:
+        print()
+        num += 1 
+
+def position_clear(x,y):
+    #stdscr = curses.initscr()
+    #rows, cols = stdscr.getmaxyx()
+    x = min(x, cols)
+    for _ in range(y):
+        for _ in range(x):
+            print(' ', end='')
+        print()
 
 def add_to_q_history(h, HISTORY):
     HISTORY += "\n\nHuman: " + h
@@ -65,17 +96,28 @@ def get_gpt3(question):
     #print(output)
     return output
 
-def get_status_thread():
+def get_status_thread(q):
     num = 0 
     while True:
+        #if not event.is_set():
+        time.sleep(10)
+        #print(num, 'thread', end=' ')
         if not event.is_set():
-            time.sleep(20)
-            #print(num, 'thread', end=' ')
-            if not event.is_set():
-                out = e.get_status()
-                print(out)
-                num += 1 
-            #print("*> ", end='')
+            out = e.get_status()
+            #q.put(out)
+            position_top()
+            position_mid(10)
+            position_clear(200, 10)
+            position_top()
+            position_mid(10)
+            print(out)
+            position_top()
+            #position_mid(1)
+            position_clear(200, 5)
+            position_top()
+            #position_mid(1)
+            num += 1 
+        #print("*> ", end='')
         pass 
 
 
@@ -87,10 +129,12 @@ if  __name__ == "__main__":
     parser.add_argument("--path", default="./../data/", help="default data directory")
     args = parser.parse_args()
     
+
     event = Event()
+    q = Queue()
 
     if args.timer:
-        t1 = Thread(target=get_status_thread)
+        t1 = Thread(target=get_status_thread, args=(q,))
         t1.start()
 
     num = 0 
@@ -109,11 +153,17 @@ if  __name__ == "__main__":
     HISTORY = ""
 
     print("URL Exchange")
+    position_top()
+    position_clear(200, 20)
+    position_top()
+    
     while True:
-        #event.set()
-        x = input("> ")
-        if args.timer:
-            event.set()
+        position_top()
+        position_clear(200, 4)
+        position_top()
+        x = input()
+        #if args.timer:
+        #    event.set()
         XPREPENDX = PREPEND['include-url']
         #print("--Main--", XPREPENDX)
         XPREPENDX += HISTORY
@@ -122,17 +172,30 @@ if  __name__ == "__main__":
 
         if args.verbose:
             print('--xxx--', xx, '--xxx--', sep="\n")
-        #i = e.mod_input(x)
-        if args.verbose:
             print(x)
-        #z = e.set_input_post_query(x)
-        #x = e.mod_input(x) 
         out = query(xx)
         if args.verbose:
             print("--- long list ---", out, "--- end ---", sep="\n")
         out = e.mod_output(out)
         HISTORY = add_to_a_history(out, HISTORY)
-        print(out) 
+        if args.timer:
+            event.set()
+        position_top()
+        position_mid(6)
+        position_clear(200, 5)
+        position_top()
+        position_mid(6)
+        print(out)
+        if args.timer:
+            event.clear()
+        '''
+        if args.timer:
+            position_top()
+            position_mid(10)
+            while q.qsize() > 0:
+                out_q = q.get()
+                print('--', out_q, '--', sep='\n')
+        '''
         x = e.mod_output(x)
         x = e.mod_input(x)
         
@@ -148,6 +211,6 @@ if  __name__ == "__main__":
         #print(num, "num")
         #e.get_status()
         num += 1 
-        if args.timer:
-            event.clear()
+        #if args.timer:
+        #    event.clear()
 
