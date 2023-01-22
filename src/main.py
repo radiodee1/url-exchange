@@ -14,15 +14,15 @@ from prepend import PREPEND
 from threading import Thread, Event
 from queue import Queue
 import curses 
-#from curses.textpad import Textbox, rectangle 
+from curses.textpad import Textbox, rectangle 
 import sys 
 
 e = Exchange()
 
 stdscr = curses.initscr()
 rows, cols = stdscr.getmaxyx()
-curses.echo()
-curses.nocbreak()
+#curses.echo()
+#curses.nocbreak()
 curses.endwin()
 
 def position_top():
@@ -143,20 +143,39 @@ def get_status_thread(q):
                 print(out)
                 #sys.stdout.write(out)
                 position_top()
-                #position_mid(1)
-                #position_clear(200, 5)
-                #position_top()
-
-                #position_line(10)
-                #position_line(5)
-                #position_line(20)
-
-                #position_mid(11)
-                #position_top()
         num += 1 
         #print("*> ", end='')
         pass 
 
+def main(stdscr):
+    stdscr.addstr(0, 0, "Enter message: (hit Enter to send)")
+
+    editwin = curses.newwin(5*3+6,30, 2,1)
+    rectangle(stdscr, 1,0, 1+5+1, 1+30+1)
+    #stdscr.refresh()
+     
+    inwin = editwin.subwin(5, 30, 5+2, 1)
+    rectangle(stdscr, 5+2, 0, 5*2+2, 1+30+1)
+
+    outwin = editwin.subwin(5 ,30, 5*2+2,1)
+    rectangle(stdscr, 1+5*2+1+1, 0, 5*3+4, 1+30+1)
+    
+    outwin.addstr(1,0 , "out...")
+    inwin.addstr(1,0, "Here...")
+    stdscr.refresh()
+
+    box = Textbox(inwin)
+
+    # Let the user edit until Ctrl-G is struck.
+    box.edit(enter_is_terminate)
+
+    # Get resulting contents
+    message = box.gather()
+
+def enter_is_terminate(x):
+    if x == 10:
+        x = 7
+    return x
 
 if  __name__ == "__main__":
     parser = argparse.ArgumentParser(description="URL Exchange", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -190,6 +209,11 @@ if  __name__ == "__main__":
     HISTORY = ""
 
     print("URL Exchange")
+
+    if args.timer:
+        curses.wrapper(main)
+        exit()
+
     os.system('clear')
     position_top()
     position_clear(200, 20)
