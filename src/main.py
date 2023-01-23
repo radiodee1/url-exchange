@@ -19,16 +19,6 @@ import sys
 
 e = Exchange()
 
-'''
-stdscr = curses.initscr()
-rows, cols = stdscr.getmaxyx()
-#curses.echo()
-#curses.nocbreak()
-curses.endwin()
-
-'''
-
-
 def add_to_q_history(h, HISTORY):
     HISTORY += "\n\nHuman: " + h
     return HISTORY
