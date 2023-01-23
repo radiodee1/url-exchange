@@ -6,7 +6,7 @@ from exchange import Exchange
 import argparse
 import os 
 import openai
-from pipeline import PipelineCloud
+#from pipeline import PipelineCloud
 import requests 
 import time
 from word2number import w2n
