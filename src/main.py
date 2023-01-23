@@ -7,12 +7,13 @@ import argparse
 import os 
 import openai
 from pipeline import PipelineCloud
+import requests 
 import time
 from word2number import w2n
 import string
 from prepend import PREPEND
 from threading import Thread, Event
-#from queue import Queue
+import json
 import curses 
 from curses.textpad import Textbox, rectangle 
 import sys 
@@ -29,39 +30,35 @@ def add_to_a_history(h, HISTORY):
 
 def get_gpt(question):
 
-    #HIDE Authentication message!!                  
-    #devnull = open('/dev/null', 'w')
-    #oldstdout_fno = os.dup(sys.stdout.fileno())
-    #os.dup2(devnull.fileno(), 1)
-
     output = ""
     prompt = question.strip()
     pipeline_token = os.environ['GPT_ETC_GPTJ_MODEL']
     pipeline_key = os.environ['GPT_ETC_GPTJ_KEY']
-    api = PipelineCloud(token=pipeline_key)
-    run = api.run_pipeline(
-        pipeline_token,
-        [
-            prompt, # [prompt],
-            {
-                "response_length": 64,
-                "temperature": 0.001, #1.0,
-                "top_k": 1 ## 50
-            },
-        ],
-    )
-    if run != None:
+
+    response = requests.post(
+        url="https://api.pipeline.ai/v2/runs",
+        headers={"Authorization": "Bearer " + pipeline_key},
+        json={
+            "pipeline_id": pipeline_token,
+            "data": [
+                prompt ,
+                {
+                    "response_length": 64,
+                    "temperature": 0.001, #1.0,
+                    "top_k": 1 ## 50
+
+    }]})
+    
+    if response != None:
         try:
-            output = run["result_preview"][0][0]
+            output = json.loads(response.text) #["result_preview"][0][0]
+            output = output['result_preview'][0][0]
         except:
-            print(run)
+            print(response)
             pass
     else: 
         output = ""
-    
-    ## RESTORE Output
-    #os.dup2(oldstdout_fno, 1)
-    
+   
     return output
 
 def get_gpt3(question):
@@ -131,7 +128,7 @@ def main(stdscr):
     outwin = editwin.subwin(5 ,50, 7*2-1,1)
     rectangle(stdscr, 7*2-1, 0, 7*3-3, 1+50+1)
     
-    hidewin = editwin.subwin(1,1,7*3+1,1)
+    #hidewin = editwin.subwin(1,1,7*3+1,1)
 
     #outwin.addstr(1,0 , "out...")
     #inwin.addstr(1,0, "Here...")
@@ -157,8 +154,8 @@ def main(stdscr):
         HISTORY = add_to_q_history(x, HISTORY)
 
         event.set()
-        hidewin.addstr(0, 0, "")
-        hidewin.refresh()
+        #hidewin.addstr(0, 0, "")
+        #hidewin.refresh()
  
         out = query(xx)
         out = e.mod_output(out)
@@ -169,7 +166,7 @@ def main(stdscr):
         #outwin.refresh()
       
         outwin.erase()
-        outwin.addstr(1,0, out)
+        outwin.addstr(1,0, out) ## <-- good !!
         outwin.noutrefresh()
         outwin.refresh()
 
