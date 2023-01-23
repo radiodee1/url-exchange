@@ -19,45 +19,15 @@ import sys
 
 e = Exchange()
 
+'''
 stdscr = curses.initscr()
 rows, cols = stdscr.getmaxyx()
 #curses.echo()
 #curses.nocbreak()
 curses.endwin()
 
-def position_top():
-    #sys.stdout.write("\x1b[f")
-    #os.system('clear')
-    print("\033[%d;%dH" % (0, 0), end='')
+'''
 
-    for _ in range(2):
-        for _ in range(cols - 1):
-            print(' ', end='')
-    print("\033[%d;%dH" % (0, 0) + "> ", end='')
-
-
-
-def position_mid(y):
-    print("\033[%d;%dH" % (y, 0), end='')
-
-def position_clear(x,y):
-    x = min(x, cols)
-    for _ in range(y):
-        for _ in range(x):
-            print(' ', end='')
-            #sys.stdout.write(' ')
-        print()
-
-def position_line(y):
-    y = min(y, rows)
-    print("\033[%d;%dH" % (y, 0), end='')
-
-    for _ in range(cols - 1):
-        #sys.stdout.write('_')
-        print('_', end='')
-    print("\033[%d;%dH" % (0, 0) + "> ", end='')
-
-    #sys.stdout.write('\x1b[f> ')
 
 def add_to_q_history(h, HISTORY):
     HISTORY += "\n\nHuman: " + h
@@ -70,9 +40,9 @@ def add_to_a_history(h, HISTORY):
 def get_gpt(question):
 
     #HIDE Authentication message!!                  
-    devnull = open('/dev/null', 'w')
-    oldstdout_fno = os.dup(sys.stdout.fileno())
-    os.dup2(devnull.fileno(), 1)
+    #devnull = open('/dev/null', 'w')
+    #oldstdout_fno = os.dup(sys.stdout.fileno())
+    #os.dup2(devnull.fileno(), 1)
 
     output = ""
     prompt = question.strip()
@@ -100,7 +70,7 @@ def get_gpt(question):
         output = ""
     
     ## RESTORE Output
-    os.dup2(oldstdout_fno, 1)
+    #os.dup2(oldstdout_fno, 1)
     
     return output
 
@@ -160,7 +130,7 @@ def main(stdscr):
 
     stdscr.addstr(0, 0, "URL Exchange: (hit Enter to send)")
 
-    editwin = curses.newwin(7*3,50, 1,1)
+    editwin = curses.newwin(7*3+2,50, 1,1)
     #stdscr.refresh()
     statwin = editwin.subwin(5, 50, 1, 1) 
     rectangle(stdscr, 1,0, 7-1, 1+50+1)
@@ -171,8 +141,10 @@ def main(stdscr):
     outwin = editwin.subwin(5 ,50, 7*2-1,1)
     rectangle(stdscr, 7*2-1, 0, 7*3-3, 1+50+1)
     
-    outwin.addstr(1,0 , "out...")
-    inwin.addstr(1,0, "Here...")
+    hidewin = editwin.subwin(1,1,7*3+1,1)
+
+    #outwin.addstr(1,0 , "out...")
+    #inwin.addstr(1,0, "Here...")
     statwin.addstr(1,0, "> ")
     stdscr.refresh()
     #curses.doupdate()
@@ -182,11 +154,8 @@ def main(stdscr):
     t1.start()
 
        
-    # Let the user edit until Ctrl-G is struck.
     while True:
         box1 = Textbox(statwin, insert_mode=True )
-        #box2 = Textbox(inwin)
-        #box3 = Textbox(outwin, insert_mode=True)
     
         box1.edit(enter_is_terminate)
         x = box1.gather()
@@ -198,12 +167,17 @@ def main(stdscr):
         HISTORY = add_to_q_history(x, HISTORY)
 
         event.set()
-
+        hidewin.addstr(0, 0, "")
+        hidewin.refresh()
+ 
         out = query(xx)
         out = e.mod_output(out)
         HISTORY = add_to_a_history(out, HISTORY)
-
-       
+        
+        #outwin.addstr(1,1,'')
+        #outwin.noutrefresh()
+        #outwin.refresh()
+      
         outwin.erase()
         outwin.addstr(1,0, out)
         outwin.noutrefresh()
@@ -223,6 +197,7 @@ def main(stdscr):
         
         #inwin.erase()
         inwin.addstr(1,0,'')
+        #editwin.refresh() ## <-- bad
         stdscr.refresh()
     
 
