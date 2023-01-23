@@ -12,7 +12,7 @@ from word2number import w2n
 import string
 from prepend import PREPEND
 from threading import Thread, Event
-from queue import Queue
+#from queue import Queue
 import curses 
 from curses.textpad import Textbox, rectangle 
 import sys 
@@ -150,27 +150,31 @@ def get_status_thread(q):
 def main(stdscr):
     stdscr.addstr(0, 0, "Enter message: (hit Enter to send)")
 
-    editwin = curses.newwin(5*3+6,30, 2,1)
-    rectangle(stdscr, 1,0, 1+5+1, 1+30+1)
+    editwin = curses.newwin(7*3,50, 1,1)
     #stdscr.refresh()
-     
-    inwin = editwin.subwin(5, 30, 5+2, 1)
-    rectangle(stdscr, 5+2, 0, 5*2+2, 1+30+1)
+    statwin = editwin.subwin(5, 50, 1, 1) 
+    rectangle(stdscr, 1,0, 7-1, 1+50+1)
+    
+    inwin = editwin.subwin(5, 50, 7, 1)
+    rectangle(stdscr, 7, 0, 7*2-2, 1+50+1)
 
-    outwin = editwin.subwin(5 ,30, 5*2+2,1)
-    rectangle(stdscr, 1+5*2+1+1, 0, 5*3+4, 1+30+1)
+    outwin = editwin.subwin(5 ,50, 7*2-1,1)
+    rectangle(stdscr, 7*2-1, 0, 7*3-3, 1+50+1)
     
     outwin.addstr(1,0 , "out...")
     inwin.addstr(1,0, "Here...")
+    statwin.addstr(1,0, "Stat here...")
     stdscr.refresh()
 
-    box = Textbox(inwin)
-
+    box1 = Textbox(statwin)
+    box2 = Textbox(inwin)
+    box3 = Textbox(outwin)
     # Let the user edit until Ctrl-G is struck.
-    box.edit(enter_is_terminate)
-
+    box1.edit(enter_is_terminate)
+    box2.edit(enter_is_terminate)
+    box3.edit(enter_is_terminate)
     # Get resulting contents
-    message = box.gather()
+    message = box1.gather()
 
 def enter_is_terminate(x):
     if x == 10:
@@ -187,7 +191,7 @@ if  __name__ == "__main__":
     
 
     event = Event()
-    q = Queue()
+    q = 0 #Queue()
 
     if args.timer:
         t1 = Thread(target=get_status_thread, args=(q,))
@@ -211,8 +215,8 @@ if  __name__ == "__main__":
     print("URL Exchange")
 
     if args.timer:
-        curses.wrapper(main)
-        exit()
+        curses.wrapper(main) 
+        sys.exit()
 
     os.system('clear')
     position_top()
