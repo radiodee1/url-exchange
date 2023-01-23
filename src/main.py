@@ -68,13 +68,11 @@ def add_to_a_history(h, HISTORY):
     return HISTORY
 
 def get_gpt(question):
-    if args.timer:
-        #position_mid(6)
-        position_mid(6)
-        position_clear(200, 4)
-        position_top()
-        position_mid(6)
 
+    #HIDE Authentication message!!                  
+    devnull = open('/dev/null', 'w')
+    oldstdout_fno = os.dup(sys.stdout.fileno())
+    os.dup2(devnull.fileno(), 1)
 
     output = ""
     prompt = question.strip()
@@ -100,18 +98,14 @@ def get_gpt(question):
             pass
     else: 
         output = ""
-    #position_top()
+    
+    ## RESTORE Output
+    os.dup2(oldstdout_fno, 1)
+    
     return output
 
 def get_gpt3(question):
-    if args.timer:
-        #position_mid(6)
-        position_mid(6)
-        position_clear(200, 4)
-        position_top()
-        position_mid(6)
-
-
+        
     question = question.strip()
     openai.api_key = os.getenv("OPENAI_API_KEY")
     completion = openai.Completion.create(
@@ -125,7 +119,7 @@ def get_gpt3(question):
     #position_top()
     return output
 
-def get_status_thread(q):
+def get_status_thread(event, inwin):
     num = 0 
     while True:
         #if not event.is_set():
@@ -135,68 +129,19 @@ def get_status_thread(q):
         if not event.is_set():
             #q.put(out)
             if len(out) != 0:
-                position_top()
-                position_mid(11)
-                position_clear(200, 9)
-                position_top()
-                position_mid(11)
-                print(out)
+                #print(out)
+                inwin.addstr(1,0, out)
+                inwin.noutrefresh()
+                inwin.refresh()
                 #sys.stdout.write(out)
-                position_top()
+                
         num += 1 
         #print("*> ", end='')
         pass 
 
 def main(stdscr):
-    stdscr.addstr(0, 0, "Enter message: (hit Enter to send)")
-
-    editwin = curses.newwin(7*3,50, 1,1)
-    #stdscr.refresh()
-    statwin = editwin.subwin(5, 50, 1, 1) 
-    rectangle(stdscr, 1,0, 7-1, 1+50+1)
-    
-    inwin = editwin.subwin(5, 50, 7, 1)
-    rectangle(stdscr, 7, 0, 7*2-2, 1+50+1)
-
-    outwin = editwin.subwin(5 ,50, 7*2-1,1)
-    rectangle(stdscr, 7*2-1, 0, 7*3-3, 1+50+1)
-    
-    outwin.addstr(1,0 , "out...")
-    inwin.addstr(1,0, "Here...")
-    statwin.addstr(1,0, "Stat here...")
-    stdscr.refresh()
-
-    box1 = Textbox(statwin)
-    box2 = Textbox(inwin)
-    box3 = Textbox(outwin)
-    # Let the user edit until Ctrl-G is struck.
-    box1.edit(enter_is_terminate)
-    box2.edit(enter_is_terminate)
-    box3.edit(enter_is_terminate)
-    # Get resulting contents
-    message = box1.gather()
-
-def enter_is_terminate(x):
-    if x == 10:
-        x = 7
-    return x
-
-if  __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="URL Exchange", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--timer', action='store_true', help='Use timer for wizard output.')
-    parser.add_argument('--gptj',action='store_true', help='use gptj instead of gpt3.')
-    parser.add_argument("--verbose", action="store_true", help="show debugging output.")
-    parser.add_argument("--path", default="./../data/", help="default data directory")
-    args = parser.parse_args()
-    
 
     event = Event()
-    q = 0 #Queue()
-
-    if args.timer:
-        t1 = Thread(target=get_status_thread, args=(q,))
-        t1.start()
-
     num = 0 
     e.set_verbose(args.verbose)
     
@@ -212,80 +157,91 @@ if  __name__ == "__main__":
 
     HISTORY = ""
 
-    print("URL Exchange")
 
-    if args.timer:
-        curses.wrapper(main) 
-        sys.exit()
+    stdscr.addstr(0, 0, "URL Exchange: (hit Enter to send)")
 
-    os.system('clear')
-    position_top()
-    position_clear(200, 20)
- 
-    position_line(10)
-    position_line(5)
-    position_line(20)
-            #   
+    editwin = curses.newwin(7*3,50, 1,1)
+    #stdscr.refresh()
+    statwin = editwin.subwin(5, 50, 1, 1) 
+    rectangle(stdscr, 1,0, 7-1, 1+50+1)
+    
+    inwin = editwin.subwin(5, 50, 7, 1)
+    rectangle(stdscr, 7, 0, 7*2-2, 1+50+1)
+
+    outwin = editwin.subwin(5 ,50, 7*2-1,1)
+    rectangle(stdscr, 7*2-1, 0, 7*3-3, 1+50+1)
+    
+    outwin.addstr(1,0 , "out...")
+    inwin.addstr(1,0, "Here...")
+    statwin.addstr(1,0, "> ")
+    stdscr.refresh()
+    #curses.doupdate()
+
+    q = 0 
+    t1 = Thread(target=get_status_thread, args=(event,inwin))
+    t1.start()
+
+       
+    # Let the user edit until Ctrl-G is struck.
     while True:
-        #position_top()
-        #position_line(10)
-        #position_line(5)
-        #position_line(20)
-         
-        #position_top()
-        x = input()
-        #if args.timer:
-        #    event.set()
+        box1 = Textbox(statwin, insert_mode=True )
+        #box2 = Textbox(inwin)
+        #box3 = Textbox(outwin, insert_mode=True)
+    
+        box1.edit(enter_is_terminate)
+        x = box1.gather()
+        
         XPREPENDX = PREPEND['include-url']
         #print("--Main--", XPREPENDX)
         XPREPENDX += HISTORY
         xx = XPREPENDX + "\n\nHuman: " + x.strip() + "\nJane: "
         HISTORY = add_to_q_history(x, HISTORY)
 
-        if args.verbose:
-            print('--xxx--', xx, '--xxx--', sep="\n")
-            print(x)
-
-        if args.timer:
-            event.set()
-
-        position_mid(6)
-        position_clear(200, 4)
-        position_top()
-        position_mid(6)
+        event.set()
 
         out = query(xx)
-        if args.verbose:
-            print("--- long list ---", out, "--- end ---", sep="\n")
         out = e.mod_output(out)
         HISTORY = add_to_a_history(out, HISTORY)
 
-        position_mid(6)
-        position_clear(200, 4)
-        position_top()
-        position_mid(6)
+       
+        outwin.erase()
+        outwin.addstr(1,0, out)
+        outwin.noutrefresh()
+        outwin.refresh()
 
-        print(out)
-        position_top()
-
-        if args.timer:
-            event.clear()
+        event.clear()
         
         x = e.mod_output(x)
         x = e.mod_input(x)
         
-        if args.verbose:
-            print(out, '----', x, '----', sep="\n")
         if e.detect_input_post_query(x) or e.detect_input_post_query(out):
             z = e.set_input_post_query(x) ## x ??
-            if args.verbose:
-                print(e.exchange['post_query'], ':post_query')
-                print(z, 'obj out')
-                if z != None:
-                    print(z.settings)
-        #print(num, "num")
-        #e.get_status()
         num += 1 
-        #if args.timer:
-        #    event.clear()
+        
+        statwin.erase()
+        statwin.addstr(1,0, "> ")
+        
+        #inwin.erase()
+        inwin.addstr(1,0,'')
+        stdscr.refresh()
+    
+
+def enter_is_terminate(x):
+    if x == 10:
+        x = 7
+    return x
+
+if  __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="URL Exchange", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--timer', action='store_true', help='Use timer for wizard output.')
+    parser.add_argument('--gptj',action='store_true', help='use gptj instead of gpt3.')
+    parser.add_argument("--verbose", action="store_true", help="show debugging output.")
+    parser.add_argument("--path", default="./../data/", help="default data directory")
+    args = parser.parse_args()
+    
+    #print("URL Exchange")
+
+    if args.timer:
+        curses.wrapper(main) 
+        sys.exit()
 
