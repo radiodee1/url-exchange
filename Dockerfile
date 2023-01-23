@@ -7,7 +7,7 @@ COPY data data
 ADD virtualenv/requirements.x86_64.txt requirements.txt
 
 
-RUN apt update  &&  apt install -y rustc cargo python3.10-dev python3-pip python3-pip-whl notcurses-bin python3-notcurses 
+RUN apt update  &&  apt install -y rustc cargo python3.10-dev python3-pip python3-pip-whl  
 RUN pip3 install --upgrade pip 
 RUN pip3 install -r requirements.txt 
 

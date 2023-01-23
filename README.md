@@ -90,5 +90,5 @@ The answers to these Wizard questions go twards performing the special task. For
 ## Requirements
 I am working on Ubuntu 22.10, and Python 3.10. I install these files.
 ```
-sudo apt install -y rustc cargo python3.10-dev python3-pip python3-pip-whl notcurses-bin python3-notcurses 
+sudo apt install -y rustc cargo python3.10-dev python3-pip python3-pip-whl  
 ```

@@ -15,4 +15,3 @@ openai==0.26.0
 word2number==1.1
 #docker-compose==1.29.2
 
-#notcurses==3.0.7
