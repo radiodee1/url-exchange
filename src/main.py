@@ -55,6 +55,10 @@ def get_gpt(question):
             output = output['result_preview'][0][0]
         except:
             print(response)
+            while True:
+                time.sleep(15)
+                pass
+            exit()
             pass
     else: 
         output = ""
@@ -136,9 +140,10 @@ def main(stdscr):
     stdscr.refresh()
     #curses.doupdate()
 
-    q = 0 
-    t1 = Thread(target=get_status_thread, args=(event,inwin))
-    t1.start()
+    if args.timer:
+        q = 0 
+        t1 = Thread(target=get_status_thread, args=(event,inwin))
+        t1.start()
 
        
     while True:
@@ -171,12 +176,15 @@ def main(stdscr):
         outwin.refresh()
 
         event.clear()
+
+        if args.timer:
+            
+            x = e.mod_output(x)
+            x = e.mod_input(x)
+            
+            if e.detect_input_post_query(x) or e.detect_input_post_query(out):
+                z = e.set_input_post_query(x) ## x ??
         
-        x = e.mod_output(x)
-        x = e.mod_input(x)
-        
-        if e.detect_input_post_query(x) or e.detect_input_post_query(out):
-            z = e.set_input_post_query(x) ## x ??
         num += 1 
         
         statwin.erase()
@@ -203,7 +211,6 @@ if  __name__ == "__main__":
     
     #print("URL Exchange")
 
-    if args.timer:
-        curses.wrapper(main) 
-        sys.exit()
+    curses.wrapper(main) 
+    sys.exit()
 
