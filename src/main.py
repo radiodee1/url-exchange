@@ -121,7 +121,7 @@ def main(stdscr):
 
     stdscr.addstr(0, 0, "URL Exchange: (hit Enter to send)")
 
-    editwin = curses.newwin(7*3+2,50, 1,1)
+    editwin = curses.newwin(7*3+2+15,50, 1,1)
     #stdscr.refresh()
     statwin = editwin.subwin(5, 50, 1, 1) 
     rectangle(stdscr, 1,0, 7-1, 1+50+1)
@@ -129,8 +129,8 @@ def main(stdscr):
     outwin = editwin.subwin(5, 50, 7, 1)
     rectangle(stdscr, 7, 0, 7*2-2, 1+50+1)
 
-    inwin = editwin.subwin(5 ,50, 7*2-1,1)
-    rectangle(stdscr, 7*2-1, 0, 7*3-3, 1+50+1)
+    inwin = editwin.subwin(5+15 ,50, 7*2-1,1)
+    rectangle(stdscr, 7*2-1, 0, 7*3-3+15, 1+50+1)
     
     #hidewin = editwin.subwin(1,1,7*3+1,1)
 
