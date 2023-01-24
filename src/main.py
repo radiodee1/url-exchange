@@ -85,26 +85,33 @@ def get_gpt3(question):
     return output
 
 def get_status_thread(event, inwin):
-    num = 0 
-    while True:
-        if join_and_end:
-            break
-        #if not event.is_set():
-        time.sleep(10)
-        out = e.get_status().strip()
-        #print(num, 'thread', end=' ')
-        if not event.is_set():
-            #q.put(out)
-            if len(out) != 0:
-                #print(out)
-                inwin.addstr(1,0, out)
+    try:
+        num = 0 
+        while True:
+            if join_and_end:
+                break
+            #if not event.is_set():
+            time.sleep(10)
+            out = e.get_status().strip()
+            #print(num, 'thread', end=' ')
+            if not event.is_set():
+                inwin.erase()
+
+                if len(out) != 0:
+                    #print(out)
+                    inwin.addstr(1,0, out)
                 inwin.noutrefresh()
                 inwin.refresh()
-                #sys.stdout.write(out)
-                
-        num += 1 
-        #print("*> ", end='')
-        pass 
+                    #sys.stdout.write(out)
+                    
+            num += 1 
+            #print("*> ", end='')
+            pass 
+    except:
+        curses.nocbreak()
+        curses.echo()
+        curses.endwin()
+
 
 def main(stdscr):
 
@@ -195,7 +202,7 @@ def main(stdscr):
         global join_and_end
         join_and_end = True
         traceback.print_exc()
-        
+        t1.join() 
     finally:
         pass 
 
@@ -221,4 +228,8 @@ if  __name__ == "__main__":
     #if args.timer:
     #    t1.join()
     #sys.exit()
+    curses.nocbreak()
+    curses.echo()
+    curses.endwin()
+    #os.system('clear')
 

@@ -157,15 +157,20 @@ class Timer(Wizard):
         try:
             num = float(self.settings['length'].split(" ")[0].strip()) 
         except:
+            num = None
             pass 
         if num == None:
             try:
                 words = w2n.word_to_num(self.settings['length'].split(" ")[0].strip())
                 num = float(words)
+                len = num * 60 
             except :
                 num = 1 
+                len = 60 
+                self.settings['length'] = str(num)
                 pass
-        len = num * 60
+        else:
+            len = num * 60
         if seconds > self.settings['start-seconds'] + len :
             self.settings['status'] = self.status['DONE']
         else:
