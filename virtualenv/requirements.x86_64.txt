@@ -1,17 +1,15 @@
 
---extra-index-url https://download.pytorch.org/whl/cpu/torch_stable.html
+#--extra-index-url https://download.pytorch.org/whl/cpu/torch_stable.html
 
-torch==1.12.1 #+cpu 
-python-dotenv==0.17.1
-transformers==4.5.1
+#torch==1.12.1 #+cpu 
+#transformers==4.5.1
 
-#cargo==0.3
 setuptools-rust==1.5.2 
-pipeline-ai==0.0.50 
+#pipeline-ai==0.0.50 
 
 dill==0.3.5.1
 openai==0.26.0 
 
 word2number==1.1
-#docker-compose==1.29.2
 
+python-dotenv==0.17.1
