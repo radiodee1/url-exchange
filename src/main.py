@@ -16,9 +16,13 @@ from threading import Thread, Event
 import json
 import curses 
 from curses.textpad import Textbox, rectangle 
-import sys 
+import sys
+import traceback
 
 e = Exchange()
+
+join_and_end = False
+#t1 = Thread()
 
 def add_to_q_history(h, HISTORY):
     HISTORY += "\n\nHuman: " + h
@@ -83,6 +87,8 @@ def get_gpt3(question):
 def get_status_thread(event, inwin):
     num = 0 
     while True:
+        if join_and_end:
+            break
         #if not event.is_set():
         time.sleep(10)
         out = e.get_status().strip()
@@ -118,7 +124,7 @@ def main(stdscr):
 
     HISTORY = ""
 
-
+    ## CURSES stuff here...
     stdscr.addstr(0, 0, "URL Exchange: (hit Enter to send)")
 
     editwin = curses.newwin(7*3+2+15,50, 1,1)
@@ -134,8 +140,6 @@ def main(stdscr):
     
     #hidewin = editwin.subwin(1,1,7*3+1,1)
 
-    #outwin.addstr(1,0 , "out...")
-    #inwin.addstr(1,0, "Here...")
     statwin.addstr(1,0, "> ")
     stdscr.refresh()
     #curses.doupdate()
@@ -145,56 +149,57 @@ def main(stdscr):
         t1 = Thread(target=get_status_thread, args=(event,inwin))
         t1.start()
 
-       
-    while True:
-        box1 = Textbox(statwin, insert_mode=True )
-    
-        box1.edit(enter_is_terminate)
-        x = box1.gather()
+    try:       
+        while True:
+            box1 = Textbox(statwin, insert_mode=True )
         
-        XPREPENDX = PREPEND['include-url']
-        #print("--Main--", XPREPENDX)
-        XPREPENDX += HISTORY
-        xx = XPREPENDX + "\n\nHuman: " + x.strip() + "\nJane: "
-        HISTORY = add_to_q_history(x, HISTORY)
-
-        event.set()
-        #hidewin.addstr(0, 0, "")
-        #hidewin.refresh()
- 
-        out = query(xx)
-        out = e.mod_output(out)
-        HISTORY = add_to_a_history(out, HISTORY)
-        
-        #outwin.addstr(1,1,'')
-        #outwin.noutrefresh()
-        #outwin.refresh()
-      
-        outwin.erase()
-        outwin.addstr(1,0, out) ## <-- good !!
-        outwin.noutrefresh()
-        outwin.refresh()
-
-        event.clear()
-
-        if args.timer:
+            box1.edit(enter_is_terminate)
+            x = box1.gather()
             
-            x = e.mod_output(x)
-            x = e.mod_input(x)
+            XPREPENDX = PREPEND['include-url']
+            #print("--Main--", XPREPENDX)
+            XPREPENDX += HISTORY
+            xx = XPREPENDX + "\n\nHuman: " + x.strip() + "\nJane: "
+            HISTORY = add_to_q_history(x, HISTORY)
+
+            event.set()
+     
+            out = query(xx)
+            out = e.mod_output(out)
+            HISTORY = add_to_a_history(out, HISTORY)
             
-            if e.detect_input_post_query(x) or e.detect_input_post_query(out):
-                z = e.set_input_post_query(x) ## x ??
+            outwin.erase()
+            outwin.addstr(1,0, out) ## <-- good !!
+            outwin.noutrefresh()
+            outwin.refresh()
+
+            event.clear()
+
+            if args.timer:
+                
+                x = e.mod_output(x)
+                x = e.mod_input(x)
+                
+                if e.detect_input_post_query(x) or e.detect_input_post_query(out):
+                    z = e.set_input_post_query(x) ## x ??
+            
+            num += 1 
+            
+            statwin.erase()
+            statwin.addstr(1,0, "> ")
+            
+            inwin.addstr(1,0,'')
+            #editwin.refresh() ## <-- bad
+            stdscr.refresh()
+    except :
+        global join_and_end
+        join_and_end = True
+        traceback.print_exc()
         
-        num += 1 
+    finally:
+        pass 
+
         
-        statwin.erase()
-        statwin.addstr(1,0, "> ")
-        
-        #inwin.erase()
-        inwin.addstr(1,0,'')
-        #editwin.refresh() ## <-- bad
-        stdscr.refresh()
-    
 
 def enter_is_terminate(x):
     if x == 10:
@@ -212,5 +217,8 @@ if  __name__ == "__main__":
     #print("URL Exchange")
 
     curses.wrapper(main) 
-    sys.exit()
+    join_and_end = True
+    #if args.timer:
+    #    t1.join()
+    #sys.exit()
 
