@@ -25,6 +25,7 @@ class Wizard:
         self.settings = { }
         self.status = {'RUNNING':0, 'DONE':1, 'DESTROY':2, 'GOOD':3, 'BAD':4}
         self.XPREPENDX = PREPEND['include-no-url'] 
+        self.use_prepend = False
 
         #print("--Wizard--", self.XPREPENDX)
 
@@ -41,6 +42,10 @@ class Wizard:
         self.input = i 
 
     def set_line(self, line):
+        if not self.use_prepend:
+            line = line.replace(self.ident_ai, '').replace(self.ident_human, "")
+            line = line.replace(":", '')
+            #print(line)
         self.line_in = line 
 
     def set_key(self, key):
@@ -78,8 +83,10 @@ class Wizard:
     def silent(self):
         for i in self.commands:
             if len(i) > 1:
-                x = self.XPREPENDX + self.line_in + ".\nJane: " + i[0].strip() + " "
-                #x =  self.line_in + ". " + i[0].strip() + " "
+                if self.use_prepend:
+                    x = self.XPREPENDX + self.line_in + ". " + i[0].strip() + "\nJane: "
+                else:
+                    x =  "Q: " + self.line_in + ". " + i[0].strip() + "\nA: "
                 #print("???", x, "???", sep="\n")
                 x = self.query(x)
                 x = self.mod_output(x)
@@ -148,6 +155,7 @@ class Timer(Wizard):
         super().__init__()
         self.key = 'timer'
         self.is_silent = True
+        self.use_prepend = False
 
     def process(self):
         super().process()
