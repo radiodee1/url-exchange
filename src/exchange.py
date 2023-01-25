@@ -173,6 +173,7 @@ class Timer(Wizard):
             len = num * 60
         if seconds > self.settings['start-seconds'] + len :
             self.settings['status'] = self.status['DONE']
+            self.settings['seconds-left'] = 0 
         else:
             self.settings['seconds-left'] = self.settings['start-seconds'] + len - seconds
 
@@ -418,8 +419,8 @@ class Exchange:
             i.process()
             z = i.get_status()
             if z == "DONE":
-                #print(i.key, "DONE")
-                out += str(i.key) + " DONE \n"
+                pass
+                #out += str(i.key) + " DONE \n"
             #print(i, z, i.settings['status'], i.key )
             out += "[" + str(z) + " " + str(i.settings) + "]\n"
             if z == "DONE" or z == "DESTROY":

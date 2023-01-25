@@ -92,3 +92,11 @@ I am working on Ubuntu 22.10, and Python 3.10. I install these files.
 ```
 sudo apt install -y rustc cargo python3.10-dev python3-pip python3-pip-whl  
 ```
+
+## Environment Variables
+The program uses two variables for GPTJ. They are GPT_ETC_GPTJ_KEY and GPT_ETC_GPTJ_MODEL.
+
+The program also can be directed to use GPT3. That uses the OPENAI_API_KEY environment variable. 
+
+## ChatGPT 
+At the time of this writing ChatGPT is a very big deal in the AI world. We would like to know weather the prompt we constructed for GPT3 and GPTJ works on ChatGPT. Unfortunately, we cannot get access to the new model right now. We _think_ it should work, but we don't know. Weather it would work better than GPT3 is also unknown.

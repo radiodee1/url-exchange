@@ -117,7 +117,7 @@ def main(stdscr):
 
     event = Event()
     num = 0 
-    e.set_verbose(args.verbose)
+    e.set_verbose(False)
     
     e.load()
     
@@ -129,6 +129,8 @@ def main(stdscr):
 
     e.set_query_cmd(query) ## input or get_gpt
 
+    global HISTORY
+    
     HISTORY = ""
 
     ## CURSES stuff here...
@@ -162,7 +164,8 @@ def main(stdscr):
         
             box1.edit(enter_is_terminate)
             x = box1.gather()
-            
+
+            x = x.replace('> ', '') 
             XPREPENDX = PREPEND['include-url']
             #print("--Main--", XPREPENDX)
             XPREPENDX += HISTORY
@@ -228,8 +231,10 @@ if  __name__ == "__main__":
     #if args.timer:
     #    t1.join()
     #sys.exit()
+
     curses.nocbreak()
     curses.echo()
     curses.endwin()
     #os.system('clear')
-
+    if args.verbose:
+        print(HISTORY)
