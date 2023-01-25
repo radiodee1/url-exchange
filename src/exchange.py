@@ -91,7 +91,8 @@ class Wizard:
                 x = self.query(x)
                 x = self.mod_output(x)
                 x = self.mod_input(x)
-                x = x.translate(str.maketrans("", "", string.punctuation))
+                if self.use_prepend:
+                    x = x.translate(str.maketrans("", "", string.punctuation))
                 try:
                     ## if x is a number, try to convert to int or int in string
                     words = w2n.word_to_num(x.split(" ")[0].strip())
@@ -282,7 +283,7 @@ class Exchange:
         wizard = None 
         if xx == "timer":
             wizard = Timer()
-        elif xx == "radio":
+        elif xx == "radio" or xx == 'play':
             wizard = Radio()
         elif xx == "username":
             wizard = Wizard()

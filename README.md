@@ -93,6 +93,8 @@ I am working on Ubuntu 22.10, and Python 3.10. I install these files.
 sudo apt install -y rustc cargo python3.10-dev python3-pip python3-pip-whl  
 ```
 
+The code is also meant to be Docker-izable. You need to install Docker yourself, but after that there are scripts in the repository that help to make the Docker container. 
+
 ## Environment Variables
 This code uses AI models on line that require special authentication to be performed. In order for this model to work for you, you need special authentication information stored in environment variables on your computer. For a linux setup these variables would be set in the `.bashrc` file in your `home` directory. The content of these variables needs to be obtained from either OpenAI, or Mystic.ai/Pipeline.ai, and the process of obtaining these is beyond the scope of this document. Basically you need to go to the sites and get the authentication keys. You might need to pay for Pipeline.ai. Note, GPT3 from OpenAI is the larger model and GPTJ from Mystic.ai is the smaller model.
 
@@ -100,5 +102,12 @@ The program uses two variables for GPTJ. They are GPT_ETC_GPTJ_KEY and GPT_ETC_G
 
 The program also can be directed to use GPT3. That uses the OPENAI_API_KEY environment variable. 
 
-## ChatGPT 
+## ChatGPT vs GPT3 vs GPTJ 
 At the time of this writing ChatGPT is a very big deal in the AI world. We would like to know weather the prompt we constructed for GPT3 and GPTJ works on ChatGPT. Unfortunately, we cannot get access to the new model right now. We _think_ it should work, but we don't know. Weather it would work better than GPT3 is also unknown.
+
+GPT3 is larger than GPTJ. GPT3 also is faster than GPTJ, and is a larger model, so it does things like answer questions from the Wizards better. GPT3 is free at this moment, While GPTJ is a paid for service. Unfortunately GPT3 is sometimes unavailable because it is so busy.
+
+## Curses 
+The `exchange.py` program is composed of several classes. It is meant to be easily incorporated in other programs. It has code that keeps track of a number of Wizard objects that could be used for managing things like timers and online radio services. This is the purpose of the 'URL Exchange', though as stated above, it might be misnamed. A better name might be 'Keyword Exchange.'
+
+For this example the `main.py` program was written. The `main.py` program is written to make example of `exchange.py`. The `main.py` program uses threads and curses (though curses is not a thread-safe library) to display its output. There is a box on the screen for input, one for output, and one that is especially for the state of the Wizard objects from `exchange.py`. These Wizard objects are updated every 10 seconds. This update interval is specified in the `main.py` code.

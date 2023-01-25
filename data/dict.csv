@@ -4,4 +4,7 @@
 http://timer; timer; wizard-silent
 http://radio; radio; wizard-silent
 
+# we dont just play music, sometimes we play games. This program does not account for game play.
+play; radio; wizard-silent
+
 #http://time; time; unimplemented
