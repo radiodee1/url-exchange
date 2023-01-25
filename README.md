@@ -94,7 +94,7 @@ sudo apt install -y rustc cargo python3.10-dev python3-pip python3-pip-whl
 ```
 
 ## Environment Variables
-This code uses AI models on line that require special authentication to be performed. In order for this model to work for you, you need special authentication information stored in environment variables on your computer. For a linux setup these variables would be set in the `.bashrc` file in your home directory. The content of these variables needs to be obtained from either OpenAI, or Mystic.ai/Pipeline.ai, and the process of obtaining these is beyond the scope of this document. Basically you need to go to the sites and get the authentication keys. You might need to pay for Pipeline.ai. Note, GPT3 from OpenAI is the larger model and GPTJ from Mystic.ai is the smaller model.
+This code uses AI models on line that require special authentication to be performed. In order for this model to work for you, you need special authentication information stored in environment variables on your computer. For a linux setup these variables would be set in the `.bashrc` file in your `home` directory. The content of these variables needs to be obtained from either OpenAI, or Mystic.ai/Pipeline.ai, and the process of obtaining these is beyond the scope of this document. Basically you need to go to the sites and get the authentication keys. You might need to pay for Pipeline.ai. Note, GPT3 from OpenAI is the larger model and GPTJ from Mystic.ai is the smaller model.
 
 The program uses two variables for GPTJ. They are GPT_ETC_GPTJ_KEY and GPT_ETC_GPTJ_MODEL.
 
