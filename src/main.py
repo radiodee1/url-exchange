@@ -29,7 +29,7 @@ def add_to_q_history(h, HISTORY):
     return HISTORY
 
 def add_to_a_history(h, HISTORY):
-    HISTORY += "\nJane: " + h
+    HISTORY += "Jane: " + h
     return HISTORY
 
 def get_gpt(question):

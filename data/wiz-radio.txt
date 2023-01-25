@@ -1,2 +1,2 @@
 # wizard-question; where-to-store
-rock music, jazz music, classical music, christmas music. In one word what kind of music do I want to hear?; type
+use one of these types of music, rock, jazz, classical, christmas. In one word what kind of music do I want to hear?; type
