@@ -117,6 +117,7 @@ class Wizard:
         r = ''
         for i in self.status:
             if self.settings['status'] == self.status[i] :
+                self.settings['status-readable'] = i 
                 r = i
         #print(r, self.settings)
         return r 
@@ -429,9 +430,8 @@ class Exchange:
             z = i.get_status()
             if z == "DONE":
                 pass
-                #out += str(i.key) + " DONE \n"
-            #print(i, z, i.settings['status'], i.key )
-            out += "[" + str(z) + " " + str(i.settings) + "]\n"
+            #out += "[" + str(z) + " " + str(i.settings) + "]\n"
+            out += str(i.settings) + "\n"
             if z == "DONE" or z == "DESTROY":
                 #del i # self.wiz[num]
                 del_list.append(i)
