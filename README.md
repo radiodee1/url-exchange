@@ -69,6 +69,15 @@ Jane: I am 21 years old.
 
 Originally I thought that the models, especially GPTJ, were trained on material taken from the web. One of the things common in the corpus is complete urls. I thought the model was trained on complete urls and so it knows that they need to be reproduced letter for letter. This may not be true.
 
+## URL Exchange - Overview
+Using the URL Exchange would require the following steps. Essentially the Exchange trades URLs or Keywords with the execution of some specific piece of code.
+
+* Start the GPT language model.
+* Answer the model's initial question and request that it perform some action.
+* The model recognizes the Keyword in the request and starts the URL Exchange.
+* The URL Exchange starts a Wizard which, unseen to the user, collects all the info necessary to launch some code.
+* The code is launched.
+
 ## URL Exchange - Prompt  
 We add these specific urls to our prompt. We put them at the beginning. There is one of these urls for every task we want the model to perform. 
 
