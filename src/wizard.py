@@ -102,6 +102,7 @@ class Wizard:
                     except:
                         pass ## not everything should be a number...
                 
+                x = x.translate(str.maketrans("", "", string.punctuation))
                 self.settings[i[1].strip().lower()] = x.strip().lower() 
         self._set_time()
         pass
