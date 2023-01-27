@@ -91,14 +91,17 @@ class Wizard:
                 x = self.query(x)
                 x = self.mod_output(x)
                 x = self.mod_input(x)
-                if self.use_prepend:
-                    x = x.translate(str.maketrans("", "", string.punctuation))
-                try:
-                    ## if x is a number, try to convert to int or int in string
-                    words = w2n.word_to_num(x.split(" ")[0].strip())
-                    x = str(words)
-                except:
-                    pass ## not everything should be a number...
+                if i[1].strip().lower() == 'length':
+                    pass
+                    if self.use_prepend:
+                        x = x.translate(str.maketrans("", "", string.punctuation))
+                    try:
+                        ## if x is a number, try to convert to int or int in string
+                        words = w2n.word_to_num(x.split(" ")[0].strip())
+                        x = str(words)
+                    except:
+                        pass ## not everything should be a number...
+                
                 self.settings[i[1].strip().lower()] = x.strip().lower() 
         self._set_time()
         pass
