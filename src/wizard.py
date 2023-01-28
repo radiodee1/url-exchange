@@ -26,7 +26,7 @@ class Wizard:
         self.status = {'RUNNING':0, 'DONE':1, 'DESTROY':2, 'GOOD':3, 'BAD':4}
         self.XPREPENDX = PREPEND['include-no-url'] 
         self.use_prepend = False
-
+        self.blacklist_words = []
         #print("--Wizard--", self.XPREPENDX)
 
     def set_process_cmd(self, p): ## what for??
@@ -69,7 +69,11 @@ class Wizard:
                 continue
             part = line.strip().split(";")
             if len(part) > 1:
-                self.commands.append([part[0].strip(), part[1].strip()]) 
+                self.commands.append([part[0].strip(), part[1].strip()])
+            elif len(part) == 1 and part[0].startswith('blacklist:'):
+                self.blacklist_words = part[0].lower().split(':')[1].strip().split(',')
+                self.blacklist_words = [ x.strip() for x in self.blacklist_words ]
+                print(self.blacklist_words, 'blacklist')
         pass
         
     def loud(self):
@@ -83,6 +87,8 @@ class Wizard:
     def silent(self):
         for i in self.commands:
             if len(i) > 1:
+                for z in self.blacklist_words:
+                    self.line_in = self.line_in.replace(z,'')
                 if self.use_prepend:
                     x = self.XPREPENDX + self.line_in + ". " + i[0].strip() + "\nJane: "
                 else:

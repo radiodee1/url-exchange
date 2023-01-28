@@ -256,7 +256,7 @@ class Exchange:
             if 'off_flag' in i.settings and i.settings['off_flag'] == True:
                 del_list.append(i)
                 for ix in self.wiz:
-                    if ix != i and  'off_flag' in ix.settings and ix.settings['off_flag'] == False and (i.key == ix.key or
+                    if ix != i and  'off_flag' in ix.settings and ix.settings['off_flag'] == False and ( #i.key == ix.key or
                             ('name' in ix.settings and 'name' in i.settings and ix.settings['name'] == i.settings['name'])):
                         del_list.append(ix)
 

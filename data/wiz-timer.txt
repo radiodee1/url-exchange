@@ -1,4 +1,6 @@
 # only one timer is allowed...
 # wizard-question; where-to-store
 In one word how long is the timer in minutes?; length
-In one word what is the timer called?; name 
+In one word what is the timer called?; name
+
+blacklist: cancel,stop,off,end
