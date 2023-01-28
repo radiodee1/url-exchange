@@ -28,6 +28,7 @@ class Exchange:
         self.classes = []
         self.path = "./../data/"
         self.wiz = []
+        self.off_words = ['off', 'stop', 'end', 'cancel']
 
     def save_dict(self):
         if self.update == False:
@@ -210,6 +211,10 @@ class Exchange:
             xx = self.exchange['post_query'][x].strip()
             if self.verbose:
                 print(x, self.exchange['post_query'][x], xx , ':tag')
+            off_flag = False
+            for z in self.off_words:
+                if z in i.lower():
+                    off_flag = True
             if xx in i.lower() or x in i.lower():
                 if xx.strip() in self.exchange['wizard-silent']:
                     key = self.exchange['wizard-silent'][xx]['object']
@@ -217,6 +222,10 @@ class Exchange:
                     key = self.exchange['wizard-loud'][xx]['object']
                 w = copy.deepcopy(key)
                 #w.set_key(key)
+                if off_flag:
+                    w.settings['off_flag'] = True
+                else:
+                    w.settings['off_flag'] = False
                 w.set_line(i)
                 if w.is_silent:
                     w.silent()
@@ -244,8 +253,13 @@ class Exchange:
         for i in self.wiz:
             i.process()
             z = i.get_status()
-            if z == "DONE":
-                pass
+            if 'off_flag' in i.settings and i.settings['off_flag'] == True:
+                del_list.append(i)
+                for ix in self.wiz:
+                    if ix != i and  'off_flag' in ix.settings and ix.settings['off_flag'] == False and (i.key == ix.key or
+                            ('name' in ix.settings and 'name' in i.settings and ix.settings['name'] == i.settings['name'])):
+                        del_list.append(ix)
+
             #out += "[" + str(z) + " " + str(i.settings) + "]\n"
             out += str(i.settings) + "\n"
             if z == "DONE" or z == "DESTROY":

@@ -200,13 +200,7 @@ class Radio(Wizard):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Wizard Objects", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--dict_name', default='./../data/dict.pickle', help='name for "dictionary" json input file.')
-    parser.add_argument('--text_name', help='name for additional "csv" input file.')
-    parser.add_argument("--wizards_loud", default="", help="comma sep list of possible loud wizards - added to current list.")
-    parser.add_argument("--wizards_silent", default="radio,timer", help="comma sep list of possible silent wizards - added to current list.")
     parser.add_argument("--verbose", action="store_true", help="show debugging output.")
-    parser.add_argument("--update", action="store_true", help="do not skip updating exchange on exit.")
-    parser.add_argument("--path", default="./../data/", help="default data directory")
     args = parser.parse_args()
 
 
