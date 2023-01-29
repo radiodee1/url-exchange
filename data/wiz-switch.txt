@@ -1,0 +1,5 @@
+# switch
+# wizard-question; where-to-store
+In one word what is the room named; name
+
+blacklist: cancel,stop,off,end
