@@ -208,6 +208,13 @@ class Radio(Wizard):
         self.key = 'radio'
         self.is_silent = True
 
+class Switch(Wizard):
+    def __init__(self):
+        super().__init__()
+        self.key = 'switch'
+        self.is_silent = True
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Wizard Objects", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--verbose", action="store_true", help="show debugging output.")

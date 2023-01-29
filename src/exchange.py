@@ -8,7 +8,7 @@ from word2number import w2n
 import string
 
 from prepend import PREPEND
-from wizard import Wizard, Timer, Radio
+from wizard import Wizard, Timer, Radio, Switch 
 
 
 class Exchange:
@@ -106,7 +106,9 @@ class Exchange:
         elif xx == "username":
             wizard = Wizard()
         elif xx == "ainame":
-            wizard = Wizard()
+            wizard = Wizard() 
+        elif xx == 'switch':
+            wizard = Switch()
         else:
             wizard = Wizard()
             pass
