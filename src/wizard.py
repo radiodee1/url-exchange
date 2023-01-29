@@ -123,6 +123,10 @@ class Wizard:
     def process(self):
         return input
 
+    def finish(self, x):
+        ## launch a program or something ##
+        pass
+
     def get_status(self):
         r = ''
         for i in self.status:

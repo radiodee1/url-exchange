@@ -205,7 +205,8 @@ def main(stdscr):
         global join_and_end
         join_and_end = True
         traceback.print_exc()
-        t1.join() 
+        if args.timer:
+            t1.join() 
     finally:
         pass 
 

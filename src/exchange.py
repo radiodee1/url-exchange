@@ -268,6 +268,7 @@ class Exchange:
                 #self.wiz.remove(i)
             num += 1
         for ii in reversed(del_list):
+            ii.finish("before delete -- launch something??")
             self.wiz.remove(ii)
         return out 
 
