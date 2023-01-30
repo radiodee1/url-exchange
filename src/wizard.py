@@ -123,6 +123,10 @@ class Wizard:
     def process(self):
         return input
 
+    def start(self, x):
+        ## launch a program or something ##
+        pass 
+
     def finish(self, x):
         ## launch a program or something ##
         pass

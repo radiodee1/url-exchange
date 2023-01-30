@@ -233,6 +233,7 @@ class Exchange:
                     w.silent()
                 elif not w.is_silent:
                     w.loud()
+                w.start("create time -- launch something??")
                 self.wiz.append(w)
                 if self.verbose:
                     print(w.settings)
@@ -258,7 +259,8 @@ class Exchange:
             if 'off_flag' in i.settings and i.settings['off_flag'] == True:
                 del_list.append(i)
                 for ix in self.wiz:
-                    if ix != i and  'off_flag' in ix.settings and ix.settings['off_flag'] == False and ( #i.key == ix.key or
+                    if ix != i and  'off_flag' in ix.settings and ix.settings['off_flag'] == False and ( 
+                            (i.key == ix.key and 'name' not in ix.settings ) or  ## <-- this will cancel any radio station ##
                             ('name' in ix.settings and 'name' in i.settings and ix.settings['name'] == i.settings['name'])):
                         del_list.append(ix)
 
