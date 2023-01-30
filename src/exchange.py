@@ -259,9 +259,7 @@ class Exchange:
             if 'off_flag' in i.settings and i.settings['off_flag'] == True:
                 del_list.append(i)
                 for ix in self.wiz:
-                    if ix != i and  'off_flag' in ix.settings and ix.settings['off_flag'] == False and ( 
-                            (i.key == ix.key and 'name' not in ix.settings ) or  ## <-- this will cancel any radio station ##
-                            ('name' in ix.settings and 'name' in i.settings and ix.settings['name'] == i.settings['name'])):
+                    if ix != i and i.may_delete_neighbor(ix):
                         del_list.append(ix)
 
             #out += "[" + str(z) + " " + str(i.settings) + "]\n"

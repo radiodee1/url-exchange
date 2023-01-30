@@ -131,6 +131,16 @@ class Wizard:
         ## launch a program or something ##
         pass
 
+    def may_delete_neighbor(self, x):
+        delete = False
+        if x.key == self.key and 'off_flag' in self.settings and 'off_flag' in x.settings and x.settings['off_flag'] != self.settings['off_flag']:
+            if x.key == 'radio':
+                delete = True
+            elif 'name' in self.settings and 'name' in x.settings and x.settings['name'] == self.settings['name']:
+                delete = True
+        return delete
+
+
     def get_status(self):
         r = ''
         for i in self.status:
