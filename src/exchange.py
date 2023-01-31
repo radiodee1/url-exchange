@@ -237,6 +237,8 @@ class Exchange:
                 self.wiz.append(w)
                 if self.verbose:
                     print(w.settings)
+                ## do this just once ##
+                self.get_status()
                 return w
         return None 
         pass 
