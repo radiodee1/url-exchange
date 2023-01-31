@@ -140,6 +140,13 @@ class Wizard:
                 delete = True
         return delete
 
+    def may_replace_neighbor(self, x):
+        replace = False 
+        if self.key == x.key and 'type' in self.settings and 'type' in x.settings and self.settings['type'] != x.settings['type']:
+            replace = True 
+        elif 'name' in self.settings and 'name' in x.settings and self.settings['name'] == x.settings['name'] and self.key == 'timer' and x.key == 'timer':
+            replace = True 
+        return replace 
 
     def get_status(self):
         r = ''

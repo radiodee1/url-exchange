@@ -253,15 +253,22 @@ class Exchange:
         out = ""
         num = 0
         del_list = []
-        for i in self.wiz:
+        for p in range(len(self.wiz)):
+            i = self.wiz[p]
             i.process()
             z = i.get_status()
+
             if 'off_flag' in i.settings and i.settings['off_flag'] == True:
                 del_list.append(i)
                 for ix in self.wiz:
                     if ix != i and i.may_delete_neighbor(ix):
                         del_list.append(ix)
 
+            else:
+                for m in range(p, len(self.wiz)): ## must come after ##
+                    xx = self.wiz[m]
+                    if xx != i and xx.may_replace_neighbor(i):
+                        del_list.append(i)
             #out += "[" + str(z) + " " + str(i.settings) + "]\n"
             out += str(i.settings) + "\n"
             if z == "DONE" or z == "DESTROY":
