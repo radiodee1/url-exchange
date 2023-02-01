@@ -27,6 +27,7 @@ class Wizard:
         self.XPREPENDX = PREPEND['include-no-url'] 
         self.use_prepend = False
         self.blacklist_words = []
+        self.whitelist_words = []
         #print("--Wizard--", self.XPREPENDX)
 
     def set_process_cmd(self, p): ## what for??
@@ -74,6 +75,10 @@ class Wizard:
                 self.blacklist_words = part[0].lower().split(':')[1].strip().split(',')
                 self.blacklist_words = [ x.strip() for x in self.blacklist_words ]
                 print(self.blacklist_words, 'blacklist')
+            elif len(part) == 1 and part[0].startswith('whitelist:'):
+                self.whitelist_words = part[0].lower().split(':')[1].strip().split(',')
+                self.whitelist_words = [ x.strip() for x in self.whitelist_words ]
+                print(self.whitelist_words, 'whitelist')
         pass
         
     def loud(self):
@@ -236,9 +241,26 @@ class Switch(Wizard):
         self.is_silent = True
 
 
+def _get_wizard_path( w):
+    x = '../data' + "/wiz-" + w + ".txt"
+    return x 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Wizard Objects", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--verbose", action="store_true", help="show debugging output.")
+    parser.add_argument('--prepare', action="store_true", help='write empty launch scripts.')
     args = parser.parse_args()
-
+    
+    if args.prepare:
+        obj_list = [ Radio, Switch ]
+        for j in obj_list:
+            j_obj = j()
+            j_filename = _get_wizard_path(j_obj.key.lower())
+            
+            j_obj.load_commands(j_filename)
+            print(j_obj.whitelist_words)
+            for k in j_obj.whitelist_words:
+                print(k)
+                pass 
+        pass 
 

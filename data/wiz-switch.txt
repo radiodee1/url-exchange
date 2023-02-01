@@ -3,3 +3,5 @@
 In one word what is the room named; name
 
 blacklist: cancel,stop,off,end
+
+whitelist: bedroom,livingroom,diningroom,study,hallway,hall,kitchen,den

@@ -3,3 +3,4 @@ there are several types of music, rock music, jazz music, classical music, chris
 
 blacklist: cancel,stop,off,end
 
+whitelist: rock,jazz,classical,christmas
