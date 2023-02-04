@@ -289,8 +289,8 @@ if __name__ == '__main__':
                     ff = open(f, 'w')
                     ff.write(   '''#!/bin/bash
                                 
-                                echo "Launch Script"
-                                echo $@ 
+                                #echo "Launch Script"
+                                #echo $@ 
                                 # curl 
                                 # ping www.google.com 
                                 ''')
