@@ -6,6 +6,7 @@ import dill as pickle
 import time
 from word2number import w2n 
 import string
+import subprocess 
 
 from prepend import PREPEND
 
@@ -136,6 +137,22 @@ class Wizard:
         ## launch a program or something ##
         pass
 
+    def _launch(self, x):
+        off_flag = False 
+        flag = 'positive'
+        condition = ''
+        path = '../data/'
+        if 'off_flag' in self.settings:
+            off_flag = self.settings['off_flag']
+        if off_flag:
+            flag = 'negative'
+        if 'name' in self.settings:
+            condition = self.settings['name']
+        elif 'type' in self.settings:
+            condition = self.settings['type']
+        name = path + self.key + "_" + flag + "_" + condition + ".sh"
+        subprocess.Popen(name, shell=False)
+
     def may_delete_neighbor(self, x):
         delete = False
         if x.key == self.key and 'off_flag' in self.settings and 'off_flag' in x.settings and x.settings['off_flag'] != self.settings['off_flag']:
@@ -240,6 +257,14 @@ class Switch(Wizard):
         self.key = 'switch'
         self.is_silent = True
 
+    def start(self, x):
+        super().start(x)
+        self._launch(x)
+
+    def finish(self, x):
+        super().finish(x)
+        self._launch(x)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Wizard Objects", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -257,8 +282,8 @@ if __name__ == '__main__':
             j_obj.load_commands(j_filename)
             print(j_obj.whitelist_words)
             for k in j_obj.whitelist_words:
-                script_pos = args.path  + "/" + j_obj.key.lower() + "_positive_" + k + ".sh"
-                script_neg = args.path  + "/" + j_obj.key.lower() + "_negative_" + k + ".sh"
+                script_pos = args.path  + "" + j_obj.key.lower() + "_positive_" + k + ".sh"
+                script_neg = args.path  + "" + j_obj.key.lower() + "_negative_" + k + ".sh"
                 print(k)
                 for f in [ script_pos, script_neg ]:
                     ff = open(f, 'w')
@@ -269,7 +294,9 @@ if __name__ == '__main__':
                                 # curl 
                                 # ping www.google.com 
                                 ''')
+                    ff.flush()
                     ff.close()
+                    subprocess.run("/bin/chmod a+x " + f, shell=True)
                 pass 
         pass 
 
