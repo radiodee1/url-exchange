@@ -217,21 +217,6 @@ def enter_is_terminate(x):
         x = 7
     return x
 
-class Logger(object):
-    def __init__(self):
-        self.terminal = sys.stdout
-        self.log = open("log.txt", "a")
-   
-    def write(self, message):
-        self.terminal.write(message)
-        self.log.write(message)  
-
-    def flush(self):
-        self.log.flush()
-        # this flush method is needed for python 3 compatibility.
-        # this handles the flush command by doing nothing.
-        # you might want to specify some extra behavior here.
-        pass    
 
 if  __name__ == "__main__":
     parser = argparse.ArgumentParser(description="URL Exchange", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -241,8 +226,8 @@ if  __name__ == "__main__":
     parser.add_argument("--path", default="./../data/", help="default data directory")
     args = parser.parse_args()
     
-    if args.verbose:
-        sys.stdout = Logger()
+    #if args.verbose:
+    #    sys.stdout = Logger()
     #print("URL Exchange")
 
     curses.wrapper(main) 
