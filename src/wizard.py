@@ -241,26 +241,35 @@ class Switch(Wizard):
         self.is_silent = True
 
 
-def _get_wizard_path( w):
-    x = '../data' + "/wiz-" + w + ".txt"
-    return x 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Wizard Objects", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--verbose", action="store_true", help="show debugging output.")
     parser.add_argument('--prepare', action="store_true", help='write empty launch scripts.')
+    parser.add_argument('--path', default='../data/', help='use this project path.')
     args = parser.parse_args()
     
     if args.prepare:
         obj_list = [ Radio, Switch ]
         for j in obj_list:
             j_obj = j()
-            j_filename = _get_wizard_path(j_obj.key.lower())
+            j_filename = args.path + "/wiz-" + j_obj.key.lower() + ".txt" 
             
             j_obj.load_commands(j_filename)
             print(j_obj.whitelist_words)
             for k in j_obj.whitelist_words:
+                script_pos = args.path  + "/" + j_obj.key.lower() + "_posotive_" + k + ".sh"
+                script_neg = args.path  + "/" + j_obj.key.lower() + "_negative_" + k + ".sh"
                 print(k)
+                for f in [ script_pos, script_neg ]:
+                    ff = open(f, 'w')
+                    ff.write(   '''#!/bin/bash
+                                
+                                echo "Launch Script"
+                                echo $@ 
+                                # curl 
+                                # ping www.google.com 
+                                ''')
+                    ff.close()
                 pass 
         pass 
 
