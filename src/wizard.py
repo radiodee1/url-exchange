@@ -257,7 +257,7 @@ if __name__ == '__main__':
             j_obj.load_commands(j_filename)
             print(j_obj.whitelist_words)
             for k in j_obj.whitelist_words:
-                script_pos = args.path  + "/" + j_obj.key.lower() + "_posotive_" + k + ".sh"
+                script_pos = args.path  + "/" + j_obj.key.lower() + "_positive_" + k + ".sh"
                 script_neg = args.path  + "/" + j_obj.key.lower() + "_negative_" + k + ".sh"
                 print(k)
                 for f in [ script_pos, script_neg ]:
