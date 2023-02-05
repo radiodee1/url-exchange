@@ -251,6 +251,15 @@ class Radio(Wizard):
         self.key = 'radio'
         self.is_silent = True
 
+    def start(self, x):
+        super().start(x)
+        self._launch(x)
+
+    def finish(self, x):
+        super().finish(x)
+        self._launch(x)
+
+
 class Switch(Wizard):
     def __init__(self):
         super().__init__()
