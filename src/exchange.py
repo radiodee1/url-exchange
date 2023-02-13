@@ -264,7 +264,7 @@ class Exchange:
             if 'off_flag' in i.settings and i.settings['off_flag'] == True:
                 del_list.append(i)
                 for ix in self.wiz:
-                    if ix != i and i.may_delete_neighbor(ix):
+                    if ix != i and i.may_delete_neighbor(ix) and ix not in del_list:
                         del_list.append(ix)
 
             else:
@@ -279,7 +279,7 @@ class Exchange:
                         del_list.append(i)
             #out += "[" + str(z) + " " + str(i.settings) + "]\n"
             out += str(i.settings) + "\n"
-            if z == "DONE" or z == "DESTROY":
+            if z == "DONE" or z == "DESTROY" and i not in del_list:
                 #del i # self.wiz[num]
                 del_list.append(i)
                 #self.wiz.remove(i)
