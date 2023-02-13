@@ -271,6 +271,11 @@ class Exchange:
                 for m in range(p, len(self.wiz)): ## must come after ##
                     xx = self.wiz[m]
                     if xx != i and xx.may_replace_neighbor(i):
+                        #del_list.append(i)
+                        if 'name' in i.settings:
+                            xx.settings['name'] = i.settings['name']
+                        elif 'type' in i.settings:
+                            xx.settings['type'] = i.settings['type']
                         del_list.append(i)
             #out += "[" + str(z) + " " + str(i.settings) + "]\n"
             out += str(i.settings) + "\n"

@@ -150,7 +150,11 @@ class Wizard:
             condition = self.settings['name']
         elif 'type' in self.settings:
             condition = self.settings['type']
-        name = path + self.key + "_" + flag + "_" + condition + ".sh"
+        if len(condition.strip()) == 0 or condition.strip() not in self.whitelist_words:
+            #print("cancel")
+            return
+        #print("shell run")
+        name = path + self.key + "_" + flag + "_" + condition.strip() + ".sh"
         subprocess.Popen(name, shell=False)
 
     def may_delete_neighbor(self, x):
