@@ -117,6 +117,7 @@ class Wizard:
                 x = x.translate(str.maketrans("", "", string.punctuation))
                 self.settings[i[1].strip().lower()] = x.strip().lower() 
         self._set_time()
+        self._do_whitelist()
         pass
 
     def _set_time(self):
@@ -125,6 +126,38 @@ class Wizard:
         #print(seconds)
         self.settings['start-seconds'] = seconds
         self.settings['status'] = self.status['RUNNING']
+
+    def _do_whitelist(self):
+        line = ''
+        origin = ''
+        if 'name' in self.settings:  
+            line = self.settings['name']
+            origin = 'name'
+        if 'type' in self.settings:
+            line = self.settings['type']
+            origin = 'type'
+        if len(line.strip()) == 0:
+            return
+        line = line.split(" ")
+        if len(line) == 1:
+            return
+        d = {}
+        for x in self.whitelist_words:
+            d[x] = 0
+        for x in line:
+            if x.strip() in self.whitelist_words:
+                d[x] += 1
+        highest = 0
+        word = ''
+        for y in d:
+            if d[y] > highest:
+                word = y
+                highest = d[y]
+        #print(word,': highest word')
+        if origin == '' or word == '':
+            return
+        self.settings[origin] = word 
+        pass 
 
     def process(self):
         return input
@@ -168,6 +201,8 @@ class Wizard:
 
     def may_replace_neighbor(self, x):
         replace = False 
+        if self.key == 'radio':
+            replace = True
         if self.key == x.key and 'type' in self.settings and 'type' in x.settings and self.settings['type'] != x.settings['type']:
             replace = True 
         elif 'name' in self.settings and 'name' in x.settings and self.settings['name'] == x.settings['name'] and self.key == 'timer' and x.key == 'timer':

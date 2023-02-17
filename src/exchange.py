@@ -273,9 +273,9 @@ class Exchange:
                     if xx != i and xx.may_replace_neighbor(i):
                         #del_list.append(i)
                         if 'name' in i.settings:
-                            xx.settings['name'] = i.settings['name']
+                            i.settings['name'] = xx.settings['name']
                         elif 'type' in i.settings:
-                            xx.settings['type'] = i.settings['type']
+                            i.settings['type'] = xx.settings['type']
                         del_list.append(i)
             #out += "[" + str(z) + " " + str(i.settings) + "]\n"
             out += str(i.settings) + "\n"
